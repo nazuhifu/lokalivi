@@ -251,7 +251,7 @@ export function SiteHeader() {
                             {isLoggedIn ? (
                                 <div className="hidden items-center gap-2 sm:flex">
                                     <Button variant="ghost" size="icon" asChild className="h-9 w-9" aria-label="Dashboard">
-                                        <Link href={user?.role === 'admin' ? '/admin/dashboard' : '/user/dashboard'}>
+                                        <Link href={'/user/dashboard'}>
                                             <User className="h-4 w-4" />
                                         </Link>
                                     </Button>

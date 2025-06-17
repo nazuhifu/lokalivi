@@ -6,6 +6,18 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('home');
 })->name('home');
+Route::get('/products', function () {
+    return Inertia::render('products');
+})->name('products');
+Route::get('/categories', function () {
+    return Inertia::render('categories');
+})->name('categories');
+Route::get('/about', function () {
+    return Inertia::render('about');
+})->name('about');
+Route::get('/contact', function () {
+    return Inertia::render('contact');
+})->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

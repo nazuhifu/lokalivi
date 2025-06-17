@@ -10,8 +10,15 @@ import { Input } from '@/components/ui/input';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { toast } from 'sonner';
 
+type User = {
+    id: number;
+    name: string;
+    email: string;
+};
+
 export function SiteHeader() {
     const { auth, cart } = usePage().props as { auth?: { user?: any }; cart?: { count: number } };
+
     const user = auth?.user;
     const isLoggedIn = !!user;
     const cartCount = cart?.count ?? 0;

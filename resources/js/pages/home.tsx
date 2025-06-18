@@ -7,7 +7,9 @@ import { FeaturedProducts } from '@/components/featured-products';
 import { TestimonialSection } from '@/components/testimonial-section';
 import { Button } from '@/components/ui/button';
 
-export default function Home() {
+import { ProductCard } from '@/types/product';
+
+export default function Home({ featuredProducts }: { featuredProducts: ProductCard[] }) {
     return (
         <AppLayout>
             <Head title="Dashboard" />
@@ -71,7 +73,7 @@ export default function Home() {
                                 </Button>
                             </Link>
                         </div>
-                        <FeaturedProducts />
+                        <FeaturedProducts products={featuredProducts} />
                     </div>
                 </section>
 

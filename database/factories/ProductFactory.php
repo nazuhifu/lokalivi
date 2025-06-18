@@ -20,7 +20,7 @@ class ProductFactory extends Factory
         return [
             'name' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
-            'category_id' => Category::inRandomOrder()->first()->id ?? 1,
+            'category_id' => Category::factory(),
             'price' => $this->faker->randomFloat(2, 499000, 2000000),
             'stock_quantity' => $this->faker->numberBetween(10, 100),
             'image_url' => $this->faker->imageUrl(640, 480, 'product', true, 'Faker'),

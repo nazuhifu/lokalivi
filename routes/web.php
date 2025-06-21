@@ -16,6 +16,12 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return Inertia::render('contact');
 })->name('contact');
+Route::get('/cart', function () {
+    return Inertia::render('cart');
+})->name('cart');
+Route::get('/wishlist', function () {
+    return Inertia::render('wishlist');
+})->name('wishlist');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

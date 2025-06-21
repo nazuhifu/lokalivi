@@ -1,6 +1,6 @@
 'use client';
 
-import { ProductCard } from '@/types/product';
+import { Products } from '@/types/product';
 import { Link } from '@inertiajs/react';
 import { Eye, Heart, ShoppingCart } from 'lucide-react';
 
@@ -8,18 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 
-type Product = {
-    id: number;
-    name: string;
-    category: string;
-    price: number;
-    image: string;
-};
-
-export function FeaturedProducts({ products }: { products: ProductCard[] }) {
+export function FeaturedProducts({ products }: { products: Products[] }) {
     const isLoggedIn = true;
 
-    const addToCart = (product: Product) => {
+    const addToCart = (product: Products) => {
         if (!isLoggedIn) {
             toast.warning('Please login', {
                 description: 'You need to login to add items to cart.',
@@ -31,7 +23,7 @@ export function FeaturedProducts({ products }: { products: ProductCard[] }) {
         });
     };
 
-    const addToWishlist = (product: Product) => {
+    const addToWishlist = (product: Products) => {
         if (!isLoggedIn) {
             toast.warning('Please login', {
                 description: 'You need to login to add items to wishlist.',
@@ -49,7 +41,7 @@ export function FeaturedProducts({ products }: { products: ProductCard[] }) {
                 <Card key={product.id} className="group overflow-hidden border border-gray-200 pt-0 transition-all hover:scale-105 hover:shadow-lg">
                     <div className="relative aspect-square overflow-hidden">
                         <img
-                            src={product.image || '/placeholder.svg'}
+                            src={product.image_url || '/placeholder.svg'}
                             alt={product.name}
                             className="h-full w-full object-cover transition-transform group-hover:scale-110"
                         />
@@ -67,7 +59,7 @@ export function FeaturedProducts({ products }: { products: ProductCard[] }) {
                         <Link href={`/products/${product.id}`} className="mb-2 block text-lg font-semibold transition-colors hover:text-[#8B5A2B]">
                             {product.name}
                         </Link>
-                        <div className="text-2xl font-bold text-[#8B5A2B]">${product.price.toLocaleString('en-US')}</div>
+                        <div className="text-2xl font-bold text-[#8B5A2B]">Rp{product.price.toLocaleString('en-US')}</div>
                     </CardContent>
                     {isLoggedIn && (
                         <CardFooter className="flex gap-2 p-6 pt-0">

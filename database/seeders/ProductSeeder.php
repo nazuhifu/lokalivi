@@ -22,7 +22,7 @@ class ProductSeeder extends Seeder
             'category_id' => 1, // Assuming category with ID 1 exists
             'price' => 19.99,
             'stock_quantity' => 100,
-            'image_url' => 'https://example.com/sample-product.jpg',
+            'image_url' => '/placeholder.jpg',
         ]);
         
         // Add more products as needed

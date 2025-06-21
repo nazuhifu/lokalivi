@@ -8,93 +8,22 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 
-type Product = {
-    id: number;
-    name: string;
-    category: string;
-    price: number;
-    image: string;
-};
+import { Products } from '@/types/product';
 
-export function ProductGrid({ categoryFilter = '' }: { categoryFilter?: string }) {
-    const [products] = useState<Product[]>([
-        {
-            id: 1,
-            name: 'Oakwood Dining Table',
-            category: 'Dining',
-            price: 1299,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 2,
-            name: 'Linen Upholstered Sofa',
-            category: 'Living Room',
-            price: 1899,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 3,
-            name: 'Walnut Bedframe',
-            category: 'Bedroom',
-            price: 1499,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 4,
-            name: 'Rattan Accent Chair',
-            category: 'Living Room',
-            price: 699,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 5,
-            name: 'Marble Coffee Table',
-            category: 'Living Room',
-            price: 899,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 6,
-            name: 'Teak Outdoor Dining Set',
-            category: 'Outdoor',
-            price: 2499,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 7,
-            name: 'Velvet Armchair',
-            category: 'Living Room',
-            price: 799,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 8,
-            name: 'Solid Wood Bookshelf',
-            category: 'Office',
-            price: 1199,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-        {
-            id: 9,
-            name: 'Leather Office Chair',
-            category: 'Office',
-            price: 899,
-            image: '/placeholder.svg?height=300&width=400',
-        },
-    ]);
-
+export function ProductGrid({ products, categories }: { products: Products[]; categories: { id: number; name: string }[] }) {
+    const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
     const filteredProducts = useMemo(() => {
         if (!categoryFilter) return products;
         return products.filter((product) => product.category === categoryFilter);
     }, [products, categoryFilter]);
 
-    const addToCart = (product: Product) => {
+    const addToCart = (product: Products) => {
         toast.message('Added to cart', {
             description: `${product.name} has been added to your cart.`,
         });
     };
 
-    const addToWishlist = (product: Product) => {
+    const addToWishlist = (product: Products) => {
         toast.message('Added to wishlist', {
             description: `${product.name} has been added to your wishlist.`,
         });
@@ -106,7 +35,7 @@ export function ProductGrid({ categoryFilter = '' }: { categoryFilter?: string }
                 <Card key={product.id} className="overflow-hidden border border-gray-200 pt-0 transition-all hover:shadow-md">
                     <div className="relative aspect-square overflow-hidden">
                         <img
-                            src={product.image || '/placeholder.svg'}
+                            src={product.image_url || '/placeholder.svg'}
                             alt={product.name}
                             className="h-full w-full object-cover transition-transform hover:scale-105"
                         />

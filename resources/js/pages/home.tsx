@@ -7,9 +7,9 @@ import { FeaturedProducts } from '@/components/featured-products';
 import { TestimonialSection } from '@/components/testimonial-section';
 import { Button } from '@/components/ui/button';
 
-import { ProductCard } from '@/types/product';
+import { Products } from '@/types/product';
 
-export default function Home({ featuredProducts }: { featuredProducts: ProductCard[] }) {
+export default function Home({ featuredProducts }: { featuredProducts: Products[] }) {
     return (
         <AppLayout>
             <Head title="Dashboard" />

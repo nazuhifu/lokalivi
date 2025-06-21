@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { Filter, Grid, List } from 'lucide-react';
 
 import { ProductFilters } from '@/components/product-filters';
@@ -5,11 +6,10 @@ import { ProductGrid } from '@/components/product-grid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { Head } from '@inertiajs/react';
-
 import AppLayout from '@/layouts/app-layout';
+import { Products } from '@/types/product';
 
-export default function ProductsPage() {
+export default function ProductsPage({ products, categories }: { products: Products[]; categories: { id: number; name: string }[] }) {
     return (
         <AppLayout>
             <Head title="Products" />
@@ -41,7 +41,7 @@ export default function ProductsPage() {
                         <ProductFilters />
                     </div>
                     <div>
-                        <ProductGrid />
+                        <ProductGrid products={products} categories={categories} />
                     </div>
                 </div>
             </div>

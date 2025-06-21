@@ -4,12 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
-Route::get('/categories', function () {
-    return Inertia::render('categories');
-})->name('categories');
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{slug}', [CategoryController::class, 'show']);
 Route::get('/about', function () {
     return Inertia::render('about');
 })->name('about');

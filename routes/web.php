@@ -9,7 +9,11 @@ use App\Http\Controllers\CategoryController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/categories/{slug}', [CategoryController::class, 'show']);
+Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])
+    ->name('categories.show');
+
+
+
 Route::get('/about', function () {
     return Inertia::render('about');
 })->name('about');

@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Heart, ShoppingCart, Trash } from 'lucide-react';
 import { useState } from 'react';
 
@@ -24,7 +24,7 @@ export default function WishlistPage() {
             id: 1,
             name: 'Oakwood Dining Table',
             category: 'Dining',
-            price: 1299,
+            price: 1299000,
             image: '/placeholder.svg?height=300&width=400',
             inStock: true,
         },
@@ -32,7 +32,7 @@ export default function WishlistPage() {
             id: 3,
             name: 'Walnut Bedframe',
             category: 'Bedroom',
-            price: 1499,
+            price: 1499000,
             image: '/placeholder.svg?height=300&width=400',
             inStock: true,
         },
@@ -40,7 +40,7 @@ export default function WishlistPage() {
             id: 7,
             name: 'Velvet Armchair',
             category: 'Living Room',
-            price: 799,
+            price: 799000,
             image: '/placeholder.svg?height=300&width=400',
             inStock: false,
         },
@@ -48,7 +48,7 @@ export default function WishlistPage() {
             id: 9,
             name: 'Leather Office Chair',
             category: 'Office',
-            price: 899,
+            price: 899000,
             image: '/placeholder.svg?height=300&width=400',
             inStock: true,
         },
@@ -62,9 +62,26 @@ export default function WishlistPage() {
     };
 
     const addToCart = (item: WishlistItem) => {
-        toast.message('Added to cart', {
-            description: `${item.name} has been added to your cart.`,
-        });
+        router.post(
+            '/cart',
+            {
+                product_id: item.id,
+                quantity: 1,
+            },
+            {
+                onSuccess: () => {
+                    toast.success('Added to cart', {
+                        description: `${item.name} has been added to your cart.`,
+                    });
+                },
+                onError: () => {
+                    toast.error('Error adding to cart', {
+                        description: 'Something went wrong. Please try again.',
+                    });
+                },
+                preserveScroll: true,
+            }
+        );
     };
 
     return (
@@ -104,7 +121,7 @@ export default function WishlistPage() {
                                     <Link href={`/products/${item.id}`} className="mt-1 block text-lg font-medium hover:underline">
                                         {item.name}
                                     </Link>
-                                    <div className="mt-2 font-semibold">${item.price.toLocaleString()}</div>
+                                    <div className="mt-2 font-semibold">Rp{item.price.toLocaleString('id-ID')}</div>
                                     <div className={`mt-1 text-sm ${item.inStock ? 'text-green-600' : 'text-red-500'}`}>
                                         {item.inStock ? 'In Stock' : 'Out of Stock'}
                                     </div>

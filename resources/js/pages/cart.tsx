@@ -1,3 +1,6 @@
+import type { PageProps } from '@/types';
+import type { CartItem } from '@/types/cart';
+
 import { Link } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, Trash } from 'lucide-react';
 
@@ -8,28 +11,12 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 
-export default function CartPage() {
-    //
-    const cartItems = [
-        {
-            id: 1,
-            name: 'Oakwood Dining Table',
-            price: 1299,
-            quantity: 1,
-            image: '/placeholder.svg?height=100&width=100',
-        },
-        {
-            id: 7,
-            name: 'Velvet Armchair',
-            price: 799,
-            quantity: 2,
-            image: '/placeholder.svg?height=100&width=100',
-        },
-    ];
 
-    const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    const shipping = 0; // Free shipping
-    const total = subtotal + shipping;
+export default function CartPage({ cart = [] }: PageProps<{ cart: CartItem[] }>) {
+  const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const shipping: number = 0;
+  const total = subtotal + shipping;
+
 
     return (
         <AppLayout>
@@ -41,7 +28,7 @@ export default function CartPage() {
 
                 <div className="grid gap-8 lg:grid-cols-3">
                     <div className="lg:col-span-2">
-                        {cartItems.length > 0 ? (
+                        {cart.length > 0 ? (
                             <div className="overflow-hidden rounded-lg border">
                                 <Table>
                                     <TableHeader>
@@ -53,7 +40,7 @@ export default function CartPage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {cartItems.map((item) => (
+                                        {cart.map((item) => (
                                             <TableRow key={item.id}>
                                                 <TableCell>
                                                     <div className="relative h-20 w-20 overflow-hidden rounded-md">
@@ -63,28 +50,25 @@ export default function CartPage() {
                                                 <TableCell>
                                                     <div>
                                                         <div className="font-medium">{item.name}</div>
-                                                        <div className="text-sm text-muted-foreground">${item.price.toLocaleString()} each</div>
+                                                        <div className="text-sm text-muted-foreground">Rp{item.price.toLocaleString()}</div>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex items-center">
                                                         <Button variant="outline" size="icon" className="h-8 w-8 rounded-r-none">
                                                             <Minus className="h-3 w-3" />
-                                                            <span className="sr-only">Decrease</span>
                                                         </Button>
                                                         <div className="flex h-8 w-12 items-center justify-center border-y">{item.quantity}</div>
                                                         <Button variant="outline" size="icon" className="h-8 w-8 rounded-l-none">
                                                             <Plus className="h-3 w-3" />
-                                                            <span className="sr-only">Increase</span>
                                                         </Button>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <div className="font-medium">${(item.price * item.quantity).toLocaleString()}</div>
+                                                        <div className="font-medium">Rp{(item.price * item.quantity).toLocaleString()}</div>
                                                         <Button variant="ghost" size="icon" className="h-8 w-8">
                                                             <Trash className="h-4 w-4" />
-                                                            <span className="sr-only">Remove</span>
                                                         </Button>
                                                     </div>
                                                 </TableCell>
@@ -125,11 +109,11 @@ export default function CartPage() {
                             <CardContent className="space-y-4">
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
-                                    <span>${subtotal.toLocaleString()}</span>
+                                    <span>Rp{subtotal.toLocaleString()}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Shipping</span>
-                                    <span>{shipping === 0 ? 'Free' : `$${Number(shipping).toLocaleString()}`}</span>
+                                    <span>{shipping === 0 ? 'Free' : `Rp${shipping.toLocaleString()}`}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Input placeholder="Discount code" />
@@ -138,7 +122,7 @@ export default function CartPage() {
                                 <Separator />
                                 <div className="flex justify-between font-medium">
                                     <span>Total</span>
-                                    <span>${total.toLocaleString()}</span>
+                                    <span>Rp{total.toLocaleString()}</span>
                                 </div>
                             </CardContent>
                             <CardFooter>

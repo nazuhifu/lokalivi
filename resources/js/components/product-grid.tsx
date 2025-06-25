@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from '@inertiajs/react';
+import { router, Link } from '@inertiajs/react';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -12,14 +12,28 @@ import { Products } from '@/types/product';
 
 export function ProductGrid({ products, categories }: { products: Products[]; categories: { id: number; name: string }[] }) {
     const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+
     const filteredProducts = useMemo(() => {
         if (!categoryFilter) return products;
         return products.filter((product) => product.category === categoryFilter);
     }, [products, categoryFilter]);
 
     const addToCart = (product: Products) => {
-        toast.message('Added to cart', {
-            description: `${product.name} has been added to your cart.`,
+        router.post('/cart', {
+            product_id: product.id,
+            quantity: 1,
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Added to cart', {
+                    description: `${product.name} has been added to your cart.`,
+                });
+            },
+            onError: () => {
+                toast.error('Failed to add to cart', {
+                    description: 'Something went wrong. Please try again.',
+                });
+            },
         });
     };
 
@@ -45,7 +59,7 @@ export function ProductGrid({ products, categories }: { products: Products[]; ca
                         <Link href={`/products/${product.id}`} className="mt-1 block text-lg font-medium hover:underline">
                             {product.name}
                         </Link>
-                        <div className="mt-2 font-semibold">${product.price.toLocaleString('en-US')}</div>
+                        <div className="mt-2 font-semibold text-[#8B5A2B]">Rp{product.price.toLocaleString('id-ID')}</div>
                     </CardContent>
                     <CardFooter className="flex gap-2 p-4 pt-0">
                         <Button variant="outline" size="icon" className="rounded-full" onClick={() => addToWishlist(product)}>

@@ -1,7 +1,7 @@
 'use client';
 
 import { Products } from '@/types/product';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Eye, Heart, ShoppingCart } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 
 export function FeaturedProducts({ products }: { products: Products[] }) {
-    const isLoggedIn = true;
+    const isLoggedIn = true; // Gantilah dengan autentikasi dari props jika perlu
 
     const addToCart = (product: Products) => {
         if (!isLoggedIn) {
@@ -18,9 +18,27 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
             });
             return;
         }
-        toast.message('Added to cart', {
-            description: `${product.name} has been added to your cart.`,
-        });
+
+        router.post(
+            '/cart',
+            {
+                product_id: product.id,
+                quantity: 1,
+            },
+            {
+                onSuccess: () => {
+                    toast.success('Added to cart', {
+                        description: `${product.name} has been added to your cart.`,
+                    });
+                },
+                onError: () => {
+                    toast.error('Error adding to cart', {
+                        description: 'Something went wrong. Please try again.',
+                    });
+                },
+                preserveScroll: true,
+            }
+        );
     };
 
     const addToWishlist = (product: Products) => {
@@ -38,7 +56,10 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
     return (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => (
-                <Card key={product.id} className="group overflow-hidden border border-gray-200 pt-0 transition-all hover:scale-105 hover:shadow-lg">
+                <Card
+                    key={product.id}
+                    className="group overflow-hidden border border-gray-200 pt-0 transition-all hover:scale-105 hover:shadow-lg"
+                >
                     <div className="relative aspect-square overflow-hidden">
                         <img
                             src={product.image_url || '/placeholder.svg'}
@@ -56,10 +77,15 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
                     </div>
                     <CardContent className="p4">
                         <div className="mb-1 text-sm text-muted-foreground">{product.category}</div>
-                        <Link href={`/products/${product.id}`} className="mb-2 block text-lg font-semibold transition-colors hover:text-[#8B5A2B]">
+                        <Link
+                            href={`/products/${product.id}`}
+                            className="mb-2 block text-lg font-semibold transition-colors hover:text-[#8B5A2B]"
+                        >
                             {product.name}
                         </Link>
-                        <div className="text-2xl font-bold text-[#8B5A2B]">Rp{product.price.toLocaleString('en-US')}</div>
+                        <div className="text-2xl font-bold text-[#8B5A2B]">
+                            Rp{product.price.toLocaleString('id-ID')}
+                        </div>
                     </CardContent>
                     {isLoggedIn && (
                         <CardFooter className="flex gap-2 p-6 pt-0">
@@ -72,7 +98,10 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
                                 <Heart className="h-4 w-4" />
                                 <span className="sr-only">Add to wishlist</span>
                             </Button>
-                            <Button className="flex-1 bg-[#8B5A2B] shadow-md hover:bg-[#6d472a]" onClick={() => addToCart(product)}>
+                            <Button
+                                className="flex-1 bg-[#8B5A2B] shadow-md hover:bg-[#6d472a]"
+                                onClick={() => addToCart(product)}
+                            >
                                 <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                             </Button>
                         </CardFooter>

@@ -6,6 +6,7 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
+import { Package2 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
     {
@@ -30,13 +31,16 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" variant="inset" className="top-16 h-[calc(100vh-4rem)]">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href="/dashboard" prefetch>
-                                <AppLogo />
+                                <div className="flex flex-row items-center gap-2">
+                                    <Package2 className="h-6 w-6 text-[#8B5A2B]" />
+                                    <span className="text-xl font-bold text-gray-900">LokaLivi</span>
+                                </div>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

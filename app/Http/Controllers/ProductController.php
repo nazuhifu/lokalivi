@@ -35,4 +35,23 @@ class ProductController extends Controller
             'categories' => $categories,
         ]);
     }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $data['image_url'] = 'storage/' . $path;
+        }
+
+        Product::create($data);
+
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+    }
 }

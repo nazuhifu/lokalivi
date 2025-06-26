@@ -9,9 +9,28 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->get()->map(function ($product) {
+        $query = Product::with('category');
+        
+        // Support multiple categories
+        $categoriesParam = $request->input('categories');
+        if ($categoriesParam) {
+            $categoryNames = array_filter(explode(',', $categoriesParam));
+            if (count($categoryNames) > 0) {
+                $query->whereHas('category', function ($q) use ($categoryNames) {
+                    $q->whereIn('name', $categoryNames);
+                });
+            }
+        } elseif ($request->has('category') && $request->category !== '') {
+            // Fallback for single category (from categories page)
+            $categoryName = $request->category;
+            $query->whereHas('category', function ($q) use ($categoryName) {
+                $q->where('name', $categoryName);
+            });
+        }
+
+        $products = $query->get()->map(function ($product) {
             return [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -30,9 +49,15 @@ class ProductController extends Controller
             ];
         });
 
+        // Pass selected categories to frontend
+        $selectedCategories = $categoriesParam
+            ? array_filter(explode(',', $categoriesParam))
+            : ($request->category ? [$request->category] : []);
+
         return Inertia::render('products', [
             'products' => $products,
             'categories' => $categories,
+            'selectedCategories' => $selectedCategories,
         ]);
     }
 

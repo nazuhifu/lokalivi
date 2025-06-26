@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider';
 export function ProductFilters({
     categories,
     selectedCategories,
-    setSelectedCategories,
+    onCategoryChange,
     priceRange,
     setPriceRange,
     minPrice,
@@ -19,17 +19,21 @@ export function ProductFilters({
 }: {
     categories: { id: number; name: string }[];
     selectedCategories: string[];
-    setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+    onCategoryChange: (newCategories: string[]) => void;
     priceRange: [number, number];
     setPriceRange: Dispatch<SetStateAction<[number, number]>>;
     minPrice: number;
     maxPrice: number;
 }) {
-    const handleCategoryChange = (category: string) => {
-        setSelectedCategories((prev) => (prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]));
+    const handleCategoryToggle = (category: string) => {
+        if (selectedCategories.includes(category)) {
+            onCategoryChange(selectedCategories.filter((c) => c !== category));
+        } else {
+            onCategoryChange([...selectedCategories, category]);
+        }
     };
     const handleClear = () => {
-        setSelectedCategories([]);
+        onCategoryChange([]);
         setPriceRange([minPrice, maxPrice]);
     };
     return (
@@ -53,7 +57,7 @@ export function ProductFilters({
                                 <Checkbox
                                     id={`category-${category.name}`}
                                     checked={selectedCategories.includes(category.name)}
-                                    onCheckedChange={() => handleCategoryChange(category.name)}
+                                    onCheckedChange={() => handleCategoryToggle(category.name)}
                                 />
                                 <label
                                     htmlFor={`category-${category.name}`}

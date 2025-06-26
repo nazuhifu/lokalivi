@@ -1,6 +1,6 @@
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Filter, Grid, List } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { ProductFilters } from '@/components/product-filters';
 import { ProductGrid } from '@/components/product-grid';
@@ -11,26 +11,54 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { Products } from '@/types/product';
 
-export default function ProductsPage({ products, categories }: { products: Products[]; categories: { id: number; name: string }[] }) {
+export default function ProductsPage({ 
+    products, 
+    categories, 
+    selectedCategories: initialSelectedCategories 
+}: { 
+    products: Products[]; 
+    categories: { id: number; name: string }[]; 
+    selectedCategories?: string[];
+}) {
     // Get min/max price from products
     const prices = products.map((p) => Number(p.price));
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);
 
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    // Sync selectedCategories with prop from server
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(initialSelectedCategories || []);
+    useEffect(() => {
+        setSelectedCategories(initialSelectedCategories || []);
+    }, [initialSelectedCategories]);
+
     const [priceRange, setPriceRange] = useState<[number, number]>([minPrice, maxPrice]);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [showSidebar, setShowSidebar] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('newest');
 
-    // Filter and sort products client-side
+    // When category filter changes, update the URL and reload from server
+    const handleCategoryChange = (newCategories: string[]) => {
+        setSelectedCategories(newCategories);
+        const params: Record<string, string> = {};
+        if (newCategories.length > 0) {
+            params.categories = newCategories.join(',');
+        }
+        router.get('/products', params, { preserveState: true });
+    };
+
+    // When clearing category filter
+    const handleClearCategory = () => {
+        setSelectedCategories([]);
+        router.get('/products', {}, { preserveState: true });
+    };
+
+    // Filter and sort products client-side (except for category, which is now server-side)
     const filteredProducts = useMemo(() => {
         let result = products.filter((product) => {
-            const inCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
             const inPrice = Number(product.price) >= priceRange[0] && Number(product.price) <= priceRange[1];
             const inSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-            return inCategory && inPrice && inSearch;
+            return inPrice && inSearch;
         });
         // Sorting
         switch (sortBy) {
@@ -52,16 +80,28 @@ export default function ProductsPage({ products, categories }: { products: Produ
                 break;
         }
         return result;
-    }, [products, selectedCategories, priceRange, searchTerm, sortBy]);
+    }, [products, priceRange, searchTerm, sortBy]);
+
+    // For title/description
+    const title = selectedCategories && selectedCategories.length === 1
+        ? `${selectedCategories[0]} Products`
+        : 'All Products';
+    const description = selectedCategories && selectedCategories.length === 1
+        ? `Browse our collection of ${selectedCategories[0].toLowerCase()} furniture`
+        : 'Browse our collection of handcrafted furniture';
 
     return (
         <AppLayout>
-            <Head title="Products" />
+            <Head title={title} />
             <div className="container mx-auto px-4 py-16 md:px-6 lg:px-20">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">All Products</h1>
-                        <p className="text-muted-foreground">Browse our collection of handcrafted furniture</p>
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            {title}
+                        </h1>
+                        <p className="text-muted-foreground">
+                            {description}
+                        </p>
                     </div>
                     <div className="flex items-center gap-2">
                         <Input
@@ -81,6 +121,14 @@ export default function ProductsPage({ products, categories }: { products: Produ
                             <option value="name-asc">Name: A-Z</option>
                             <option value="name-desc">Name: Z-A</option>
                         </select>
+                        {selectedCategories && selectedCategories.length > 0 && (
+                            <Button 
+                                variant="outline" 
+                                onClick={handleClearCategory}
+                            >
+                                Clear Category Filter
+                            </Button>
+                        )}
                         <Button variant="outline" size="icon" onClick={() => setShowSidebar((v) => !v)}>
                             <Filter className="h-4 w-4" />
                             <span className="sr-only">Filter</span>
@@ -101,7 +149,7 @@ export default function ProductsPage({ products, categories }: { products: Produ
                         <ProductFilters
                             categories={categories}
                             selectedCategories={selectedCategories}
-                            setSelectedCategories={setSelectedCategories}
+                            onCategoryChange={handleCategoryChange}
                             priceRange={priceRange}
                             setPriceRange={setPriceRange}
                             minPrice={minPrice}

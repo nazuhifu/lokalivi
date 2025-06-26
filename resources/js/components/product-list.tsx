@@ -1,23 +1,10 @@
-'use client';
-
+import { Button } from '@/components/ui/button';
+import { Products } from '@/types/product';
 import { Link, router } from '@inertiajs/react';
 import { Heart, ShoppingCart } from 'lucide-react';
-import { useMemo, useState } from 'react';
-
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 
-import { Products } from '@/types/product';
-
-export function ProductGrid({ products }: { products: Products[] }) {
-    const [categoryFilter] = useState<string | null>(null);
-
-    const filteredProducts = useMemo(() => {
-        if (!categoryFilter) return products;
-        return products.filter((product) => product.category === categoryFilter);
-    }, [products, categoryFilter]);
-
+export function ProductList({ products }: { products: Products[] }) {
     const addToCart = (product: Products) => {
         router.post(
             '/cart',
@@ -40,7 +27,6 @@ export function ProductGrid({ products }: { products: Products[] }) {
             },
         );
     };
-
     const addToWishlist = (product: Products) => {
         router.post(
             '/wishlist',
@@ -62,39 +48,32 @@ export function ProductGrid({ products }: { products: Products[] }) {
             },
         );
     };
-
     return (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProducts.map((product) => (
-                <Card
+        <div className="space-y-4">
+            {products.map((product) => (
+                <div
                     key={product.id}
-                    className="animate-fadeIn transform overflow-hidden border border-gray-200 pt-0 opacity-0 transition transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md"
+                    className="animate-fadeIn flex transform items-center gap-4 rounded-lg border bg-white p-4 opacity-0 shadow-sm transition duration-300 ease-in-out hover:scale-[1.01]"
                     style={{ animation: 'fadeIn 0.4s forwards' }}
                 >
-                    <div className="relative aspect-square overflow-hidden">
-                        <img
-                            src={product.image_url || '/placeholder.svg'}
-                            alt={product.name}
-                            className="h-full w-full object-cover transition-transform hover:scale-105"
-                        />
-                    </div>
-                    <CardContent className="p-4">
+                    <img src={product.image_url || '/placeholder.svg'} alt={product.name} className="h-24 w-24 flex-shrink-0 rounded object-cover" />
+                    <div className="min-w-0 flex-1">
                         <div className="text-sm text-muted-foreground">{product.category}</div>
-                        <Link href={`/products/${product.id}`} className="mt-1 block text-lg font-medium hover:underline">
+                        <Link href={`/products/${product.id}`} className="block truncate text-lg font-medium hover:underline">
                             {product.name}
                         </Link>
-                        <div className="mt-2 font-semibold text-[#8B5A2B]">Rp{product.price.toLocaleString('id-ID')}</div>
-                    </CardContent>
-                    <CardFooter className="flex gap-2 p-4 pt-0">
+                        <div className="mt-1 font-semibold text-[#8B5A2B]">Rp{product.price.toLocaleString('id-ID')}</div>
+                    </div>
+                    <div className="flex flex-col gap-2">
                         <Button variant="outline" size="icon" className="rounded-full" onClick={() => addToWishlist(product)}>
                             <Heart className="h-4 w-4" />
                             <span className="sr-only">Add to wishlist</span>
                         </Button>
-                        <Button className="flex-1 bg-[#8B5A2B] hover:bg-[#6d472a]" onClick={() => addToCart(product)}>
+                        <Button className="bg-[#8B5A2B] hover:bg-[#6d472a]" onClick={() => addToCart(product)}>
                             <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                         </Button>
-                    </CardFooter>
-                </Card>
+                    </div>
+                </div>
             ))}
         </div>
     );

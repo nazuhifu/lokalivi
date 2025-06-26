@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Inertia } from '@inertiajs/inertia';
-import { usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { BarChart3, DollarSign, Eye, LogOut, Package, Settings, ShoppingBag, TrendingDown, TrendingUp, Users } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -176,9 +176,11 @@ export default function AdminDashboard() {
                                 Manage Products
                             </Button>
 
-                            <Button className="w-full justify-start gap-3" variant="outline">
-                                <ShoppingBag className="h-4 w-4" />
-                                View All Orders
+                            <Button className="w-full justify-start gap-3" variant="outline" asChild>
+                                <Link href="/admin/orders">
+                                    <ShoppingBag className="h-4 w-4" />
+                                    View All Orders
+                                </Link>
                             </Button>
 
                             <Button className="w-full justify-start gap-3" variant="outline">

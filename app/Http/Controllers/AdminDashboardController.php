@@ -58,4 +58,12 @@ class AdminDashboardController extends Controller
       ],
     ]);
   }
+
+  public function orders()
+  {
+    $orders = \App\Models\Order::with('user', 'items.product')->orderByDesc('created_at')->get();
+    return inertia('admin/orders', [
+      'orders' => $orders
+    ]);
+  }
 }

@@ -9,19 +9,22 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
 
-Route::get('/about', fn () => Inertia::render('about'))->name('about');
-Route::get('/contact', fn () => Inertia::render('contact'))->name('contact');
+Route::get('/about', fn() => Inertia::render('about'))->name('about');
+Route::get('/contact', fn() => Inertia::render('contact'))->name('contact');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::delete('/wishlist/{product}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -37,7 +40,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/orders', [AdminDashboardController::class, 'orders'])->name('admin.orders');
 });
+
+Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+
+Route::get('/checkout-success', fn() => Inertia::render('checkout-success'))->name('checkout.success');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

@@ -5,22 +5,22 @@ const testimonials = [
     name: "Sarah Johnson",
     role: "Interior Designer",
     content:
-      "SolHome furniture pieces are exceptional in quality and design. My clients always fall in love with the craftsmanship and attention to detail.",
-    avatar: "/placeholder.svg?height=100&width=100",
+      "LokaLivi furniture pieces are exceptional in quality and design. My clients always fall in love with the craftsmanship and attention to detail.",
+    avatar: "/images/testimoni/1.jpg?height=100&width=100",
   },
   {
     name: "Michael Chen",
     role: "Homeowner",
     content:
-      "We furnished our entire living room with SolHome pieces. The quality is outstanding and the customer service was excellent from start to finish.",
-    avatar: "/placeholder.svg?height=100&width=100",
+      "We furnished our entire living room with LokaLivi pieces. The quality is outstanding and the customer service was excellent from start to finish.",
+    avatar: "/images/testimoni/2.jpg?height=100&width=100",
   },
   {
     name: "Emily Rodriguez",
     role: "Architect",
     content:
-      "As an architect, I appreciate the perfect balance of form and function in SolHome's designs. Their pieces complement my projects beautifully.",
-    avatar: "/placeholder.svg?height=100&width=100",
+      "As an architect, I appreciate the perfect balance of form and function in LokaLivi's designs. Their pieces complement my projects beautifully.",
+    avatar: "/images/testimoni/3.jpg?height=100&width=100",
   },
 ]
 

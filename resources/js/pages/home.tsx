@@ -12,7 +12,7 @@ import { Products } from '@/types/product';
 export default function Home({ featuredProducts }: { featuredProducts: Products[] }) {
     return (
         <AppLayout>
-            <Head title="Dashboard" />
+            <Head title="Home" />
             <div className="flex min-h-screen flex-col">
                 <section className="relative h-[90vh] w-full overflow-hidden">
                     {/* Background Image */}
@@ -83,7 +83,7 @@ export default function Home({ featuredProducts }: { featuredProducts: Products[
 
                 {/* Category Showcase */}
                 <section className="bg-[#f8f5f0] py-20">
-                    <div className="container mx-auto px-4 md:px-6 lg:px-12">
+                    <div className="container mx-auto px-4 md:px-6 lg:px-20">
                         <h2 className="mb-12 text-center text-4xl font-bold tracking-tight">Shop by Category</h2>
                         <CategoryShowcase />
                     </div>
@@ -91,7 +91,7 @@ export default function Home({ featuredProducts }: { featuredProducts: Products[
 
                 {/* Testimonials */}
                 <section className="bg-white py-20">
-                    <div className="container mx-auto px-4 md:px-6 lg:px-12">
+                    <div className="container mx-auto px-4 md:px-6 lg:px-20">
                         <h2 className="mb-12 text-center text-4xl font-bold tracking-tight">What Our Customers Say</h2>
                         <TestimonialSection />
                     </div>
@@ -99,7 +99,7 @@ export default function Home({ featuredProducts }: { featuredProducts: Products[
 
                 {/* About Section */}
                 <section className="bg-[#f8f5f0] py-20">
-                    <div className="container mx-auto px-4 md:px-6 lg:px-12">
+                    <div className="container mx-auto px-4 md:px-6 lg:px-20">
                         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
                             <div className="flex flex-col justify-center space-y-6">
                                 <h2 className="text-4xl font-bold tracking-tight">Our Craftsmanship</h2>
@@ -116,7 +116,7 @@ export default function Home({ featuredProducts }: { featuredProducts: Products[
                                 </Link>
                             </div>
                             <div className="relative h-[500px] overflow-hidden rounded-lg shadow-2xl">
-                                <div className="absolute inset-0 bg-[url('/placeholder.svg?height=500&width=600')] bg-cover bg-center"></div>
+                                <div className="absolute inset-0 bg-[url('/images/home/1.jpg?height=500&width=600')] bg-cover bg-center"></div>
                             </div>
                         </div>
                     </div>

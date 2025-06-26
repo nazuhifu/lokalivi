@@ -10,14 +10,8 @@ import { toast } from 'sonner';
 
 import { Products } from '@/types/product';
 
-export function ProductGrid({
-    products,
-    categories,
-}: {
-    products: Products[];
-    categories: { id: number; name: string }[];
-}) {
-    const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+export function ProductGrid({ products }: { products: Products[]; categories: { id: number; name: string }[] }) {
+    const [categoryFilter] = useState<string | null>(null);
 
     const filteredProducts = useMemo(() => {
         if (!categoryFilter) return products;

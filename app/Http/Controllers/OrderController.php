@@ -51,6 +51,7 @@ class OrderController extends Controller
         'user_id' => $userId,
         'total' => $orderTotal,
         'status' => 'Processing',
+        'shipping' => $validated['shipping'],
       ]);
 
       foreach ($orderItems as $item) {

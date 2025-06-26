@@ -18,6 +18,21 @@ function formatIDR(amount: number) {
     return 'Rp' + amount.toLocaleString('id-ID', { maximumFractionDigits: 0 });
 }
 
+function renderPaymentMethod(method?: string) {
+    switch (method) {
+        case 'bank-transfer':
+            return '🏦 Bank Transfer';
+        case 'e-wallet':
+            return '📱 E-Wallet';
+        case 'qris':
+            return '🔳 QRIS';
+        case 'virtual-account':
+            return '🧾 Virtual Account';
+        default:
+            return method || '-';
+    }
+}
+
 export default function Dashboard() {
     const { props } = usePage<{ user: User; orders: any[] }>();
     const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
@@ -132,7 +147,7 @@ export default function Dashboard() {
 
             {/* Order Details Modal */}
             <Dialog open={showModal} onOpenChange={closeOrderModal}>
-                <DialogContent className="max-w-lg">
+                <DialogContent className="flex max-h-[90vh] max-w-lg flex-col">
                     <DialogHeader>
                         <DialogTitle>Order Details</DialogTitle>
                         <DialogDescription>
@@ -159,7 +174,7 @@ export default function Dashboard() {
                         </DialogDescription>
                     </DialogHeader>
                     {selectedOrder && (
-                        <div className="mt-4 space-y-6">
+                        <div className="mt-4 flex-1 space-y-6 overflow-auto">
                             {/* Contact & Shipping Info */}
                             <div className="rounded-lg border bg-gray-50 p-4">
                                 <h3 className="mb-2 text-lg font-semibold">Contact & Shipping Information</h3>
@@ -197,12 +212,52 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             </div>
+                            {/* Payment Info */}
+                            <div className="rounded-lg border bg-gray-50 p-4">
+                                <h3 className="mb-2 text-lg font-semibold">Payment Information</h3>
+                                {selectedOrder.payment ? (
+                                    <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+                                        <div>
+                                            <div>
+                                                <span className="font-medium">Method:</span> {renderPaymentMethod(selectedOrder.payment.method)}
+                                            </div>
+                                            {selectedOrder.payment.method === 'bank-transfer' && (
+                                                <div>
+                                                    <span className="font-medium">Bank:</span> {selectedOrder.payment.bank_name}
+                                                </div>
+                                            )}
+                                            {selectedOrder.payment.method === 'e-wallet' && (
+                                                <>
+                                                    <div>
+                                                        <span className="font-medium">E-Wallet:</span> {selectedOrder.payment.ewallet_type}
+                                                    </div>
+                                                    <div>
+                                                        <span className="font-medium">Number:</span> {selectedOrder.payment.ewallet_number}
+                                                    </div>
+                                                </>
+                                            )}
+                                            {selectedOrder.payment.method === 'virtual-account' && (
+                                                <div>
+                                                    <span className="font-medium">Virtual Account:</span> 8808123456789012
+                                                </div>
+                                            )}
+                                            {selectedOrder.payment.method === 'qris' && (
+                                                <div>
+                                                    <span className="font-medium">QRIS:</span> (Paid via QRIS)
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-muted-foreground">No payment info available.</div>
+                                )}
+                            </div>
                             {/* Items Table */}
                             <div>
                                 <h3 className="mb-2 text-lg font-semibold">Items</h3>
-                                <div className="overflow-x-auto rounded-lg border">
+                                <div className="max-h-64 overflow-x-auto overflow-y-auto rounded-lg border bg-white shadow-inner">
                                     <table className="min-w-full text-sm">
-                                        <thead className="bg-gray-50">
+                                        <thead className="sticky top-0 z-10 bg-gray-50">
                                             <tr>
                                                 <th className="px-4 py-2 text-left font-medium">Product</th>
                                                 <th className="px-4 py-2 text-left font-medium">Quantity</th>

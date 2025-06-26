@@ -13,10 +13,12 @@ class Order extends Model
     'total',
     'status',
     'shipping',
+    'payment',
   ];
 
   protected $casts = [
     'shipping' => 'array',
+    'payment' => 'array',
   ];
 
   public function user()

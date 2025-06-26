@@ -52,6 +52,7 @@ class OrderController extends Controller
         'total' => $orderTotal,
         'status' => 'Processing',
         'shipping' => $validated['shipping'],
+        'payment' => $request->input('payment', []),
       ]);
 
       foreach ($orderItems as $item) {

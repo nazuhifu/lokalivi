@@ -14,6 +14,7 @@ return new class extends Migration
       $table->decimal('total', 12, 2);
       $table->string('status')->default('pending');
       $table->json('shipping')->nullable();
+      $table->json('payment')->nullable();
       $table->timestamps();
     });
 

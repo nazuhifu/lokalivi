@@ -9,11 +9,22 @@ class Product extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'description', 'category_id', 'price', 'stock_quantity', 'image_url'
+        'name',
+        'description',
+        'category_id',
+        'price',
+        'stock_quantity',
+        'image_url'
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getImageUrlAttribute($value)
+    {
+        if (!$value) return null;
+        return '/' . ltrim($value, '/');
     }
 }

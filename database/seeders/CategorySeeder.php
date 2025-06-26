@@ -23,14 +23,6 @@ class CategorySeeder extends Seeder
             ['name' => 'Cabinet'],
             ['name' => 'Shelf'],
             ['name' => 'Wardrobe'],
-            ['name' => 'Dresser'],
-            ['name' => 'Coffee Table'],
-            ['name' => 'Dining Table'],
-            ['name' => 'Office Chair'],
-            ['name' => 'Recliner'],
-            ['name' => 'Bean Bag'],
-            ['name' => 'Ottoman'],
-            ['name' => 'Bar Stool'],
         ];
 
         foreach ($categories as $category) {

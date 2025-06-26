@@ -14,6 +14,7 @@ type User = {
     id: number;
     name: string;
     email: string;
+    is_admin: boolean;
 };
 
 export function SiteHeader() {
@@ -24,6 +25,7 @@ export function SiteHeader() {
 
     const user = auth?.user;
     const isLoggedIn = !!user;
+    const isAdmin = !!user?.is_admin;
     const cartCount = cart?.count ?? 0;
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     return (
@@ -115,7 +117,7 @@ export function SiteHeader() {
                                                     <div className="px-3 py-2 text-sm font-medium text-gray-900">Hi, {user?.name}</div>
                                                     <SheetClose asChild>
                                                         <Link
-                                                            href={'dashboard'}
+                                                            href={isAdmin ? '/admin/dashboard' : '/dashboard'}
                                                             className="-mx-3 flex items-center gap-3 rounded-md px-3 py-3 text-gray-900 transition-colors hover:bg-white hover:text-[#8B5A2B]"
                                                         >
                                                             <User className="h-5 w-5" />
@@ -251,7 +253,7 @@ export function SiteHeader() {
                             {isLoggedIn ? (
                                 <div className="hidden items-center gap-2 sm:flex">
                                     <Button variant="ghost" size="icon" asChild className="h-9 w-9" aria-label="Dashboard">
-                                        <Link href={'/dashboard'}>
+                                        <Link href={isAdmin ? '/admin/dashboard' : '/dashboard'}>
                                             <User className="h-4 w-4" />
                                         </Link>
                                     </Button>

@@ -13,7 +13,7 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         // You can use factories to create products
-        \App\Models\Product::factory(50)->create();
+        // \App\Models\Product::factory(50)->create();
 
         // Or you can manually create products
         // \App\Models\Product::create([

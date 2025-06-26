@@ -44,7 +44,12 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'is_admin' => $request->user()->is_admin,
+                ] : null,
             ],
             'cart' => [
                 'count' => $request->user() ? $request->user()->carts()->count() : 0,

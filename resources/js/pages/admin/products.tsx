@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Pencil, Plus, Trash } from 'lucide-react';
+import DashboardSidebarLayout from '@/layouts/app/dashboard-sidebar-layout';
 
 export default function AdminProducts() {
     const { products } = usePage().props as any;
@@ -14,7 +15,7 @@ export default function AdminProducts() {
     };
 
     return (
-        <AppLayout>
+        <DashboardSidebarLayout>
             <div className="container mx-auto px-4 py-10 md:px-6 lg:px-20">
                 <div className="mb-6 flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Product Management</h1>
@@ -66,6 +67,6 @@ export default function AdminProducts() {
                     </table>
                 </Card>
             </div>
-        </AppLayout>
+        </DashboardSidebarLayout>
     );
 }

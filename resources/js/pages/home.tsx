@@ -44,16 +44,20 @@ export default function Home({ featuredProducts }: { featuredProducts: Products[
                                 tells a story of quality and elegance.
                             </p>
                             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                                <Button size="lg" className="border-0 bg-[#8B5A2B] px-8 py-4 text-lg text-white hover:bg-[#6d472a]">
-                                    Shop Collection <ArrowRight className="ml-2 h-5 w-5" />
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className="border-white bg-white px-8 py-4 text-lg text-black hover:border-black hover:bg-black hover:text-white"
-                                >
-                                    Our Story
-                                </Button>
+                                <Link href="/products">
+                                    <Button size="lg" className="border-0 bg-[#8B5A2B] px-8 py-4 text-lg text-white hover:bg-[#6d472a]">
+                                        Shop Collection <ArrowRight className="ml-2 h-5 w-5" />
+                                    </Button>
+                                </Link>
+                                <Link href="/about">
+                                    <Button
+                                        size="lg"
+                                        variant="outline"
+                                        className="border-white bg-white px-8 py-4 text-lg text-black hover:border-black hover:bg-black hover:text-white"
+                                    >
+                                        Our Story
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -107,7 +111,9 @@ export default function Home({ featuredProducts }: { featuredProducts: Products[
                                     Our furniture is not just functional; it tells a story, brings warmth to your home, and is built to last for
                                     generations.
                                 </p>
-                                <Button className="w-fit bg-[#8B5A2B] px-8 py-4 text-lg hover:bg-[#6d472a]">Learn More About Us</Button>
+                                <Link href="/about">
+                                    <Button className="w-fit bg-[#8B5A2B] px-8 py-4 text-lg hover:bg-[#6d472a]">Learn More About Us</Button>
+                                </Link>
                             </div>
                             <div className="relative h-[500px] overflow-hidden rounded-lg shadow-2xl">
                                 <div className="absolute inset-0 bg-[url('/placeholder.svg?height=500&width=600')] bg-cover bg-center"></div>

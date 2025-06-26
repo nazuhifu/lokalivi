@@ -36,15 +36,21 @@ class CartController extends Controller
         $product = Product::findOrFail($data['product_id']);
         $user = $request->user();
 
-        $user->carts()->updateOrCreate(
-            ['product_id' => $product->id],
-            [
-                'name'     => $product->name,
-                'price'    => (int) $product->price,
-                'image'    => $product->image_url,
-                'quantity' => \DB::raw('quantity + ' . ($data['quantity'] ?? 1))
-            ]
-        );
+        $cartItem = $user->carts()->where('product_id', $product->id)->first();
+
+        if ($cartItem) {
+            $cartItem->update([
+                'quantity' => $cartItem->quantity + ($data['quantity'] ?? 1),
+            ]);
+        } else {
+            $user->carts()->create([
+                'product_id' => $product->id,
+                'name'       => $product->name,
+                'price'      => (int) $product->price,
+                'image'      => $product->image_url,
+                'quantity'   => $data['quantity'] ?? 1,
+            ]);
+        }
 
         return back()->with('success', 'Product added/updated in cart');
     }
@@ -70,5 +76,4 @@ class CartController extends Controller
 
         return back()->with('success', 'Item removed from cart');
     }
-
 }

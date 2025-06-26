@@ -156,7 +156,7 @@ export default function AboutPage() {
                                 {
                                     name: 'Lidya Khairunisa',
                                     role: 'Workshop Manager',
-                                    image: '/placeholder.svg?height=300&width=300',
+                                    image: '/images/about/about-6.jpg?height=300&width=300',
                                 },
                                 {
                                     name: 'Muhammad Irfan Dhiya',

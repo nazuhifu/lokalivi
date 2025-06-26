@@ -11,7 +11,14 @@ class Order extends Model
   protected $fillable = [
     'user_id',
     'total',
-    'status'
+    'status',
+    'shipping',
+    'payment',
+  ];
+
+  protected $casts = [
+    'shipping' => 'array',
+    'payment' => 'array',
   ];
 
   public function user()

@@ -1,5 +1,5 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowLeft, CheckCircle, CreditCard, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, CheckCircle, ShieldCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ function SuccessModal({ open, onClose }: { open: boolean; onClose: () => void })
                 <CheckCircle className="mb-4 h-16 w-16 text-green-500" />
                 <h2 className="mb-2 text-center text-2xl font-bold">Thank you for your order!</h2>
                 <p className="mb-6 text-center text-muted-foreground">
-                    Your order has been placed successfully. You can track your order or return to the homepage.
+                    Your order was successfully placed. You can track it or return to the homepage.
                 </p>
                 <div className="flex gap-3">
                     <Button asChild className="bg-[#8B5A2B] hover:bg-[#6d472a]">
@@ -49,6 +49,10 @@ type CheckoutForm = {
         country: string;
     };
     payment: {
+        method: string;
+        bank_name: string;
+        ewallet_type: string;
+        ewallet_number: string;
         card_number: string;
         expiry_month: string;
         expiry_year: string;
@@ -62,6 +66,7 @@ export default function CheckoutPage() {
     const cart = props.cart || [];
     const orderSuccess = props.orderSuccess || false;
     const [showModal, setShowModal] = useState(false);
+
     const { data, setData, post, processing, errors } = useForm<CheckoutForm>({
         shipping: {
             first_name: '',
@@ -75,6 +80,10 @@ export default function CheckoutPage() {
             country: '',
         },
         payment: {
+            method: 'bank-transfer',
+            bank_name: '',
+            ewallet_type: '',
+            ewallet_number: '',
             card_number: '',
             expiry_month: '',
             expiry_year: '',
@@ -88,7 +97,7 @@ export default function CheckoutPage() {
             'items',
             cart.map((item: any) => ({ product_id: item.product_id, quantity: item.quantity })),
         );
-    }, [cart, setData]);
+    }, [cart]);
 
     useEffect(() => {
         if (orderSuccess) setShowModal(true);
@@ -103,7 +112,7 @@ export default function CheckoutPage() {
         });
     };
 
-    const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setData('payment', {
             ...data.payment,
             [e.target.id]: e.target.value,
@@ -131,151 +140,107 @@ export default function CheckoutPage() {
 
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold">Checkout</h1>
-                    <p className="text-muted-foreground">Complete your order by providing your shipping and payment details</p>
+                    <p className="text-muted-foreground">Complete your order by providing your shipping and payment details.</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-2">
                     <div className="space-y-8">
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-semibold">Contact Information</h2>
+                        {/* Contact Info */}
+                        <Section title="Contact Information">
                             <div className="grid gap-4 sm:grid-cols-2">
-                                <div className="space-y-2">
-                                    <Label htmlFor="first_name">First Name</Label>
-                                    <Input
-                                        id="first_name"
-                                        value={data.shipping.first_name}
-                                        onChange={handleShippingChange}
-                                        placeholder="Enter your first name"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="last_name">Last Name</Label>
-                                    <Input
-                                        id="last_name"
-                                        value={data.shipping.last_name}
-                                        onChange={handleShippingChange}
-                                        placeholder="Enter your last name"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="email">Email</Label>
-                                    <Input
-                                        id="email"
-                                        type="email"
-                                        value={data.shipping.email}
-                                        onChange={handleShippingChange}
-                                        placeholder="Enter your email"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="phone">Phone</Label>
-                                    <Input
-                                        id="phone"
-                                        type="tel"
-                                        value={data.shipping.phone}
-                                        onChange={handleShippingChange}
-                                        placeholder="Enter your phone number"
-                                    />
-                                </div>
+                                <InputGroup label="First Name" id="first_name" value={data.shipping.first_name} onChange={handleShippingChange} />
+                                <InputGroup label="Last Name" id="last_name" value={data.shipping.last_name} onChange={handleShippingChange} />
+                                <InputGroup label="Email" id="email" value={data.shipping.email} onChange={handleShippingChange} type="email" />
+                                <InputGroup label="Phone" id="phone" value={data.shipping.phone} onChange={handleShippingChange} type="tel" />
                             </div>
-                        </div>
+                        </Section>
 
                         <Separator />
 
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-semibold">Shipping Address</h2>
-                            <div className="grid gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="address">Street Address</Label>
-                                    <Input
-                                        id="address"
-                                        value={data.shipping.address}
-                                        onChange={handleShippingChange}
-                                        placeholder="Enter your street address"
-                                    />
-                                </div>
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="city">City</Label>
-                                        <Input id="city" value={data.shipping.city} onChange={handleShippingChange} placeholder="Enter your city" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="state">State / Province</Label>
-                                        <Input
-                                            id="state"
-                                            value={data.shipping.state}
-                                            onChange={handleShippingChange}
-                                            placeholder="Enter your state or province"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="zip">ZIP / Postal Code</Label>
-                                        <Input id="zip" value={data.shipping.zip} onChange={handleShippingChange} placeholder="Enter your ZIP code" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="country">Country</Label>
-                                        <Input
-                                            id="country"
-                                            value={data.shipping.country}
-                                            onChange={handleShippingChange}
-                                            placeholder="Enter your country"
-                                        />
-                                    </div>
-                                </div>
+                        {/* Shipping Address */}
+                        <Section title="Shipping Address">
+                            <InputGroup label="Street Address" id="address" value={data.shipping.address} onChange={handleShippingChange} />
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <InputGroup label="City" id="city" value={data.shipping.city} onChange={handleShippingChange} />
+                                <InputGroup label="State/Province" id="state" value={data.shipping.state} onChange={handleShippingChange} />
+                                <InputGroup label="ZIP Code" id="zip" value={data.shipping.zip} onChange={handleShippingChange} />
+                                <InputGroup label="Country" id="country" value={data.shipping.country} onChange={handleShippingChange} />
                             </div>
-                        </div>
+                        </Section>
 
                         <Separator />
 
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-semibold">Payment Method</h2>
-                            <RadioGroup defaultValue="credit-card">
-                                <div className="flex items-center space-x-2 rounded-md border p-4">
-                                    <RadioGroupItem value="credit-card" id="credit-card" />
-                                    <Label htmlFor="credit-card" className="flex items-center gap-2 font-normal">
-                                        <CreditCard className="h-4 w-4" />
-                                        Credit / Debit Card
-                                    </Label>
-                                </div>
-                                <div className="grid gap-4 p-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="card_number">Card Number</Label>
-                                        <Input
-                                            id="card_number"
-                                            value={data.payment.card_number}
-                                            onChange={handlePaymentChange}
-                                            placeholder="0000 0000 0000 0000"
-                                        />
-                                    </div>
-                                    <div className="grid gap-4 sm:grid-cols-3">
-                                        <div className="space-y-2">
-                                            <Label htmlFor="expiry_month">Expiry Month</Label>
-                                            <Input
-                                                id="expiry_month"
-                                                value={data.payment.expiry_month}
-                                                onChange={handlePaymentChange}
-                                                placeholder="MM"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="expiry_year">Expiry Year</Label>
-                                            <Input
-                                                id="expiry_year"
-                                                value={data.payment.expiry_year}
-                                                onChange={handlePaymentChange}
-                                                placeholder="YY"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="cvc">CVC</Label>
-                                            <Input id="cvc" value={data.payment.cvc} onChange={handlePaymentChange} placeholder="CVC" />
-                                        </div>
-                                    </div>
-                                </div>
+                        {/* Payment Method */}
+                        <Section title="Payment Method">
+                            <RadioGroup value={data.payment.method} onValueChange={(value) => setData('payment', { ...data.payment, method: value })}>
+                                <RadioOption id="bank-transfer" label="🏦 Bank Transfer (BCA, Mandiri, etc.)" />
+                                <RadioOption id="e-wallet" label="📱 E-Wallet (GoPay, OVO, DANA, ShopeePay)" />
+                                <RadioOption id="qris" label="🔳 QRIS" />
+                                <RadioOption id="virtual-account" label="🧾 Virtual Account" />
                             </RadioGroup>
-                        </div>
+
+                            {/* Dynamic Payment Forms */}
+                            {data.payment.method === 'bank-transfer' && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="bank_name">Select Bank</Label>
+                                    <select
+                                        id="bank_name"
+                                        value={data.payment.bank_name}
+                                        onChange={handlePaymentChange}
+                                        className="w-full rounded-md border px-3 py-2"
+                                    >
+                                        <option value="">-- Select Bank --</option>
+                                        <option value="BCA">BCA</option>
+                                        <option value="Mandiri">Mandiri</option>
+                                        <option value="BNI">BNI</option>
+                                        <option value="BRI">BRI</option>
+                                    </select>
+                                </div>
+                            )}
+
+                            {data.payment.method === 'e-wallet' && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="ewallet_type">Select E-Wallet</Label>
+                                    <select
+                                        id="ewallet_type"
+                                        value={data.payment.ewallet_type}
+                                        onChange={handlePaymentChange}
+                                        className="w-full rounded-md border px-3 py-2"
+                                    >
+                                        <option value="">-- Select --</option>
+                                        <option value="GoPay">GoPay</option>
+                                        <option value="OVO">OVO</option>
+                                        <option value="DANA">DANA</option>
+                                        <option value="ShopeePay">ShopeePay</option>
+                                    </select>
+                                    <Input
+                                        id="ewallet_number"
+                                        value={data.payment.ewallet_number}
+                                        onChange={handlePaymentChange}
+                                        placeholder="Registered phone number"
+                                    />
+                                </div>
+                            )}
+
+                            {data.payment.method === 'qris' && (
+                                <div className="space-y-2 rounded border p-4 text-sm text-muted-foreground">
+                                    <p>Scan this QR using your e-wallet app.</p>
+                                    <div className="mt-2 flex h-40 w-40 items-center justify-center rounded-md border bg-gray-100">
+                                        [QR CODE PLACEHOLDER]
+                                    </div>
+                                </div>
+                            )}
+
+                            {data.payment.method === 'virtual-account' && (
+                                <div className="space-y-2 rounded border p-4 text-sm">
+                                    <p>Your Virtual Account Number:</p>
+                                    <div className="font-mono text-lg font-semibold">8808123456789012</div>
+                                </div>
+                            )}
+                        </Section>
                     </div>
 
+                    {/* Order Summary */}
                     <div>
                         <Card>
                             <CardHeader>
@@ -289,14 +254,14 @@ export default function CheckoutPage() {
                                                 {item.name}
                                                 {item.quantity > 1 ? ` (x${item.quantity})` : ''}
                                             </span>
-                                            <span>${(item.price * item.quantity).toLocaleString()}</span>
+                                            <span>Rp {(item.price * item.quantity).toLocaleString()}</span>
                                         </div>
                                     ))}
                                 </div>
                                 <Separator />
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
-                                    <span>${subtotal.toLocaleString()}</span>
+                                    <span>Rp {subtotal.toLocaleString()}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Shipping</span>
@@ -305,7 +270,7 @@ export default function CheckoutPage() {
                                 <Separator />
                                 <div className="flex justify-between font-medium">
                                     <span>Total</span>
-                                    <span>${subtotal.toLocaleString()}</span>
+                                    <span>Rp {subtotal.toLocaleString()}</span>
                                 </div>
                             </CardContent>
                             <CardFooter className="flex flex-col gap-4">
@@ -323,5 +288,47 @@ export default function CheckoutPage() {
             </div>
             <SuccessModal open={showModal} onClose={() => setShowModal(false)} />
         </AppLayout>
+    );
+}
+
+// Reusable form components
+function InputGroup({
+    id,
+    label,
+    value,
+    onChange,
+    type = 'text',
+}: {
+    id: string;
+    label: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    type?: string;
+}) {
+    return (
+        <div className="space-y-2">
+            <Label htmlFor={id}>{label}</Label>
+            <Input id={id} value={value} onChange={onChange} placeholder={label} type={type} />
+        </div>
+    );
+}
+
+function RadioOption({ id, label }: { id: string; label: string }) {
+    return (
+        <div className="flex items-center space-x-2 rounded-md border p-4">
+            <RadioGroupItem value={id} id={id} />
+            <Label htmlFor={id} className="flex items-center gap-2 font-normal">
+                {label}
+            </Label>
+        </div>
+    );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+    return (
+        <div className="space-y-4">
+            <h2 className="text-xl font-semibold">{title}</h2>
+            {children}
+        </div>
     );
 }

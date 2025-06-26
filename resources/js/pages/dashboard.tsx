@@ -1,8 +1,10 @@
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/dashboard-layout';
 import { type BreadcrumbItem, type User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,8 +13,59 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+// Helper for formatting IDR currency
+function formatIDR(amount: number) {
+    return 'Rp' + amount.toLocaleString('id-ID', { maximumFractionDigits: 0 });
+}
+
+function renderPaymentMethod(method?: string) {
+    switch (method) {
+        case 'bank-transfer':
+            return '🏦 Bank Transfer';
+        case 'e-wallet':
+            return '📱 E-Wallet';
+        case 'qris':
+            return '🔳 QRIS';
+        case 'virtual-account':
+            return '🧾 Virtual Account';
+        default:
+            return method || '-';
+    }
+}
+
 export default function Dashboard() {
     const { props } = usePage<{ user: User; orders: any[] }>();
+    const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const [deleteOrderId, setDeleteOrderId] = useState<number | null>(null);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+    const openOrderModal = (order: any) => {
+        setSelectedOrder(order);
+        setShowModal(true);
+    };
+    const closeOrderModal = () => {
+        setShowModal(false);
+        setSelectedOrder(null);
+    };
+
+    const handleDeleteClick = (orderId: number) => {
+        setDeleteOrderId(orderId);
+        setShowDeleteDialog(true);
+    };
+    const handleDeleteConfirm = () => {
+        if (deleteOrderId) {
+            router.delete(`/orders/${deleteOrderId}`, {
+                onSuccess: () => router.reload(),
+            });
+        }
+        setShowDeleteDialog(false);
+        setDeleteOrderId(null);
+    };
+    const handleDeleteCancel = () => {
+        setShowDeleteDialog(false);
+        setDeleteOrderId(null);
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -56,20 +109,13 @@ export default function Dashboard() {
                                         <tr key={order.id}>
                                             <td className="px-4 py-2 font-medium">#{order.id}</td>
                                             <td className="px-4 py-2">{new Date(order.created_at).toLocaleDateString()}</td>
-                                            <td className="px-4 py-2">${order.total.toLocaleString()}</td>
+                                            <td className="px-4 py-2">{formatIDR(order.total)}</td>
                                             <td className="px-4 py-2">{order.status}</td>
                                             <td className="px-4 py-2">
-                                                <Button
-                                                    size="sm"
-                                                    variant="destructive"
-                                                    onClick={() => {
-                                                        if (window.confirm('Are you sure you want to delete this order?')) {
-                                                            router.delete(`/orders/${order.id}`, {
-                                                                onSuccess: () => router.reload(),
-                                                            });
-                                                        }
-                                                    }}
-                                                >
+                                                <Button size="sm" variant="secondary" className="mr-2" onClick={() => openOrderModal(order)}>
+                                                    View Details
+                                                </Button>
+                                                <Button size="sm" variant="destructive" onClick={() => handleDeleteClick(order.id)}>
                                                     Delete
                                                 </Button>
                                             </td>
@@ -98,6 +144,166 @@ export default function Dashboard() {
                     <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                 </div>
             </div>
+
+            {/* Order Details Modal */}
+            <Dialog open={showModal} onOpenChange={closeOrderModal}>
+                <DialogContent className="flex max-h-[90vh] max-w-lg flex-col">
+                    <DialogHeader>
+                        <DialogTitle>Order Details</DialogTitle>
+                        <DialogDescription>
+                            {selectedOrder && (
+                                <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="font-medium">Order #</span>
+                                        <span>#{selectedOrder.id}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="font-medium">Date</span>
+                                        <span>{new Date(selectedOrder.created_at).toLocaleDateString()}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="font-medium">Status</span>
+                                        <span>{selectedOrder.status}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="font-medium">Total</span>
+                                        <span className="text-lg font-bold text-[#8B5A2B]">{formatIDR(selectedOrder.total)}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </DialogDescription>
+                    </DialogHeader>
+                    {selectedOrder && (
+                        <div className="mt-4 flex-1 space-y-6 overflow-auto">
+                            {/* Contact & Shipping Info */}
+                            <div className="rounded-lg border bg-gray-50 p-4">
+                                <h3 className="mb-2 text-lg font-semibold">Contact & Shipping Information</h3>
+                                <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+                                    <div>
+                                        <div>
+                                            <span className="font-medium">First Name:</span> {selectedOrder.shipping?.first_name}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">Last Name:</span> {selectedOrder.shipping?.last_name}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">Email:</span> {selectedOrder.shipping?.email}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">Phone:</span> {selectedOrder.shipping?.phone}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <span className="font-medium">Street Address:</span> {selectedOrder.shipping?.address}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">City:</span> {selectedOrder.shipping?.city}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">State/Province:</span> {selectedOrder.shipping?.state}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">ZIP Code:</span> {selectedOrder.shipping?.zip}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium">Country:</span> {selectedOrder.shipping?.country}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Payment Info */}
+                            <div className="rounded-lg border bg-gray-50 p-4">
+                                <h3 className="mb-2 text-lg font-semibold">Payment Information</h3>
+                                {selectedOrder.payment ? (
+                                    <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+                                        <div>
+                                            <div>
+                                                <span className="font-medium">Method:</span> {renderPaymentMethod(selectedOrder.payment.method)}
+                                            </div>
+                                            {selectedOrder.payment.method === 'bank-transfer' && (
+                                                <div>
+                                                    <span className="font-medium">Bank:</span> {selectedOrder.payment.bank_name}
+                                                </div>
+                                            )}
+                                            {selectedOrder.payment.method === 'e-wallet' && (
+                                                <>
+                                                    <div>
+                                                        <span className="font-medium">E-Wallet:</span> {selectedOrder.payment.ewallet_type}
+                                                    </div>
+                                                    <div>
+                                                        <span className="font-medium">Number:</span> {selectedOrder.payment.ewallet_number}
+                                                    </div>
+                                                </>
+                                            )}
+                                            {selectedOrder.payment.method === 'virtual-account' && (
+                                                <div>
+                                                    <span className="font-medium">Virtual Account:</span> 8808123456789012
+                                                </div>
+                                            )}
+                                            {selectedOrder.payment.method === 'qris' && (
+                                                <div>
+                                                    <span className="font-medium">QRIS:</span> (Paid via QRIS)
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-muted-foreground">No payment info available.</div>
+                                )}
+                            </div>
+                            {/* Items Table */}
+                            <div>
+                                <h3 className="mb-2 text-lg font-semibold">Items</h3>
+                                <div className="max-h-64 overflow-x-auto overflow-y-auto rounded-lg border bg-white shadow-inner">
+                                    <table className="min-w-full text-sm">
+                                        <thead className="sticky top-0 z-10 bg-gray-50">
+                                            <tr>
+                                                <th className="px-4 py-2 text-left font-medium">Product</th>
+                                                <th className="px-4 py-2 text-left font-medium">Quantity</th>
+                                                <th className="px-4 py-2 text-left font-medium">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {selectedOrder.items &&
+                                                selectedOrder.items.map((item: any) => (
+                                                    <tr key={item.id}>
+                                                        <td className="px-4 py-2">{item.product?.name || 'Product'}</td>
+                                                        <td className="px-4 py-2">{item.quantity}</td>
+                                                        <td className="px-4 py-2">{formatIDR(item.price)}</td>
+                                                    </tr>
+                                                ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    <DialogFooter>
+                        <Button variant="outline" onClick={closeOrderModal}>
+                            Close
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={showDeleteDialog} onOpenChange={handleDeleteCancel}>
+                <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Delete Order</DialogTitle>
+                        <DialogDescription>Are you sure you want to delete this order?</DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={handleDeleteCancel}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={handleDeleteConfirm}>
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

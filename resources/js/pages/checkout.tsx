@@ -1,6 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowLeft, CreditCard, ShieldCheck } from 'lucide-react';
-import { useEffect } from 'react';
+import { ArrowLeft, CheckCircle, CreditCard, ShieldCheck } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +9,32 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
+
+function SuccessModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+    if (!open) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="flex w-full max-w-md flex-col items-center rounded-lg bg-white p-8 shadow-lg">
+                <CheckCircle className="mb-4 h-16 w-16 text-green-500" />
+                <h2 className="mb-2 text-center text-2xl font-bold">Thank you for your order!</h2>
+                <p className="mb-6 text-center text-muted-foreground">
+                    Your order has been placed successfully. You can track your order or return to the homepage.
+                </p>
+                <div className="flex gap-3">
+                    <Button asChild className="bg-[#8B5A2B] hover:bg-[#6d472a]">
+                        <Link href="/">Back to Home</Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                        <Link href="/dashboard">Go to Dashboard</Link>
+                    </Button>
+                </div>
+                <Button variant="ghost" className="mt-4" onClick={onClose}>
+                    Close
+                </Button>
+            </div>
+        </div>
+    );
+}
 
 type CheckoutForm = {
     shipping: {
@@ -34,6 +60,8 @@ type CheckoutForm = {
 export default function CheckoutPage() {
     const props = usePage().props as any;
     const cart = props.cart || [];
+    const orderSuccess = props.orderSuccess || false;
+    const [showModal, setShowModal] = useState(false);
     const { data, setData, post, processing, errors } = useForm<CheckoutForm>({
         shipping: {
             first_name: '',
@@ -62,6 +90,10 @@ export default function CheckoutPage() {
         );
     }, [cart, setData]);
 
+    useEffect(() => {
+        if (orderSuccess) setShowModal(true);
+    }, [orderSuccess]);
+
     const subtotal = cart.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
 
     const handleShippingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +112,10 @@ export default function CheckoutPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/checkout');
+        post('/checkout', {
+            preserveState: true,
+            replace: true,
+        });
     };
 
     return (
@@ -286,6 +321,7 @@ export default function CheckoutPage() {
                     </div>
                 </form>
             </div>
+            <SuccessModal open={showModal} onClose={() => setShowModal(false)} />
         </AppLayout>
     );
 }

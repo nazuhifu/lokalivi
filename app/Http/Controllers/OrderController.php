@@ -64,7 +64,10 @@ class OrderController extends Controller
       }
 
       DB::commit();
-      return Inertia::location('/checkout-success');
+      return Inertia::render('checkout', [
+        'cart' => [],
+        'orderSuccess' => true,
+      ]);
     } catch (\Exception $e) {
       DB::rollBack();
       return back()->withErrors(['checkout' => 'Order could not be processed.']);
@@ -153,5 +156,13 @@ class OrderController extends Controller
     return inertia('orders', [
       'orders' => $orders
     ]);
+  }
+
+  public function destroy(Request $request, $orderId)
+  {
+    $user = $request->user();
+    $order = $user->orders()->findOrFail($orderId);
+    $order->delete();
+    return redirect()->route('dashboard')->with('success', 'Order deleted successfully.');
   }
 }

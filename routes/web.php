@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\WishlistController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,9 +30,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
-    Route::get('/dashboard', fn () => Inertia::render('dashboard', [
+    Route::get('/dashboard', fn() => Inertia::render('dashboard', [
         'user' => Auth::user(),
     ]))->name('dashboard');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
 
 require __DIR__ . '/settings.php';

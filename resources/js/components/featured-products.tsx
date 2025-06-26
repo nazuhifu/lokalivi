@@ -9,16 +9,36 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 
 export function FeaturedProducts({ products }: { products: Products[] }) {
-    const isLoggedIn = true; // Gantilah dengan autentikasi dari props jika perlu
+    const isLoggedIn = true; // Ganti dengan auth dari usePage().props jika sudah tersedia
 
-    const addToCart = (product: Products) => {
+    const addToWishlist = (product: Products) => {
         if (!isLoggedIn) {
             toast.warning('Please login', {
-                description: 'You need to login to add items to cart.',
+                description: 'You need to login to add items to wishlist.',
             });
             return;
         }
 
+        router.post(
+            '/wishlist',
+            { product_id: product.id },
+            {
+                onSuccess: () => {
+                    toast.success('Added to wishlist', {
+                        description: `${product.name} has been added to your wishlist.`,
+                    });
+                },
+                onError: () => {
+                    toast.error('Failed to add to wishlist', {
+                        description: 'Something went wrong. Please try again.',
+                    });
+                },
+                preserveScroll: true,
+            }
+        );
+    };
+
+    const addToCart = (product: Products) => {
         router.post(
             '/cart',
             {
@@ -39,18 +59,6 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
                 preserveScroll: true,
             }
         );
-    };
-
-    const addToWishlist = (product: Products) => {
-        if (!isLoggedIn) {
-            toast.warning('Please login', {
-                description: 'You need to login to add items to wishlist.',
-            });
-            return;
-        }
-        toast.message('Added to wishlist', {
-            description: `${product.name} has been added to your wishlist.`,
-        });
     };
 
     return (
@@ -75,7 +83,7 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
                             </Button>
                         </div>
                     </div>
-                    <CardContent className="p4">
+                    <CardContent className="p-4">
                         <div className="mb-1 text-sm text-muted-foreground">{product.category}</div>
                         <Link
                             href={`/products/${product.id}`}
@@ -87,7 +95,7 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
                             Rp{product.price.toLocaleString('id-ID')}
                         </div>
                     </CardContent>
-                    {isLoggedIn && (
+                    {isLoggedIn ? (
                         <CardFooter className="flex gap-2 p-6 pt-0">
                             <Button
                                 variant="outline"
@@ -105,8 +113,7 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
                                 <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                             </Button>
                         </CardFooter>
-                    )}
-                    {!isLoggedIn && (
+                    ) : (
                         <CardFooter className="p-6 pt-0">
                             <Button className="w-full bg-gray-100 text-gray-600 hover:bg-gray-200" asChild>
                                 <Link href="/auth/login">Login to Purchase</Link>

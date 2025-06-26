@@ -29,7 +29,7 @@ export default function CategoriesPage({ categories }: { categories: Category[] 
                     {categories.map((category) => (
                         <Link
                             key={category.name}
-                            href={`/categories/${category.id}`}
+                            href={`/products?category=${encodeURIComponent(category.name)}`}
                             className="group overflow-hidden rounded-lg border shadow-sm transition-all hover:scale-105 hover:shadow-md"
                         >
                             <div className="aspect-[4/3] w-full overflow-hidden">

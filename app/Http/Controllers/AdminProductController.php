@@ -13,7 +13,17 @@ class AdminProductController extends Controller
 {
   public function index()
   {
-    $products = Product::with('category')->latest()->get();
+    $products = Product::with('category')->latest()->get()->map(function ($product) {
+      return [
+        'id' => $product->id,
+        'name' => $product->name,
+        'image_url' => $product->main_image ?? '/placeholder.svg',
+        'price' => $product->price,
+        'stock_quantity' => $product->stock_quantity,
+        'category' => $product->category,
+      ];
+    });
+    
     return Inertia::render('admin/products', [
       'products' => $products,
     ]);
@@ -73,9 +83,28 @@ class AdminProductController extends Controller
   {
     $categories = Category::all();
     $product->load('productImages');
+    
+    // Format the product data to ensure images are properly displayed
+    $formattedProduct = [
+      'id' => $product->id,
+      'name' => $product->name,
+      'description' => $product->description,
+      'category_id' => $product->category_id,
+      'price' => $product->price,
+      'stock_quantity' => $product->stock_quantity,
+      'features' => $product->features,
+      'specifications' => $product->specifications,
+      'product_images' => $product->productImages->map(function ($image) {
+        return [
+          'id' => $image->id,
+          'image_url' => $image->image_url,
+        ];
+      }),
+    ];
+    
     return Inertia::render('admin/product-form', [
       'categories' => $categories,
-      'product' => $product,
+      'product' => $formattedProduct,
     ]);
   }
 

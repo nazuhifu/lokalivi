@@ -38,8 +38,8 @@ class ProductController extends Controller
                 'category' => $product->category->name ?? 'Uncategorized',
                 'price' => $product->price,
                 'stock_quantity' => $product->stock_quantity,
-                'image_url' => $product->image_url,
-                'main_image' => $product->main_image,
+                'image_url' => $product->main_image ?? '/placeholder.svg',
+                'main_image' => $product->main_image ?? '/placeholder.svg',
             ];
         });
 
@@ -76,7 +76,7 @@ class ProductController extends Controller
                     'id' => $relatedProduct->id,
                     'name' => $relatedProduct->name,
                     'price' => $relatedProduct->price,
-                    'image_url' => $relatedProduct->main_image,
+                    'image_url' => $relatedProduct->main_image ?? '/placeholder.svg',
                     'rating' => $relatedProduct->rating,
                 ];
             });
@@ -89,7 +89,7 @@ class ProductController extends Controller
                 'category' => $product->category->name ?? 'Uncategorized',
                 'price' => $product->price,
                 'stock_quantity' => $product->stock_quantity,
-                'image_url' => $product->main_image,
+                'image_url' => $product->main_image ?? '/placeholder.svg',
                 'images' => $product->all_images,
                 'features' => $product->features ?? [],
                 'specifications' => $product->specifications ?? [],

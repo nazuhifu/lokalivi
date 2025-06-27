@@ -16,7 +16,15 @@ class CartController extends Controller
     {
         $user = $request->user();
 
-        $cart = $user->carts()->get(['id', 'name', 'price', 'quantity', 'image'])->toArray();
+        $cart = $user->carts()->with('product')->get()->map(function ($cartItem) {
+            return [
+                'id' => $cartItem->id,
+                'name' => $cartItem->name,
+                'price' => $cartItem->price,
+                'quantity' => $cartItem->quantity,
+                'image' => $cartItem->product->main_image ?? '/placeholder.svg',
+            ];
+        })->toArray();
 
         return Inertia::render('cart', [
             'cart' => $cart
@@ -47,7 +55,7 @@ class CartController extends Controller
                 'product_id' => $product->id,
                 'name'       => $product->name,
                 'price'      => (int) $product->price,
-                'image'      => $product->image_url,
+                'image'      => $product->main_image ?? '/placeholder.svg',
                 'quantity'   => $data['quantity'] ?? 1,
             ]);
         }

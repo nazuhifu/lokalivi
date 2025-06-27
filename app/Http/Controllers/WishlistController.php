@@ -22,7 +22,7 @@ class WishlistController extends Controller
                     'name' => $item->product->name,
                     'category' => $item->product->category->name ?? 'Unknown',
                     'price' => $item->product->price,
-                    'image' => $item->product->image,
+                    'image' => $item->product->main_image ?? '/placeholder.svg',
                 ];
             }),
         ]);

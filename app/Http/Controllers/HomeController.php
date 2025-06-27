@@ -21,7 +21,7 @@ class HomeController extends Controller
                     'name' => $product->name,
                     'category' => $product->category->name,
                     'price' => $product->price,
-                    'image' => $product->image_url ?? '/placeholder.svg',
+                    'image_url' => $product->main_image ?? '/placeholder.svg',
                 ];
             });
 

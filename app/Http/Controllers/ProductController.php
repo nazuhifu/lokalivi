@@ -13,6 +13,12 @@ class ProductController extends Controller
     {
         $query = Product::with('category');
         
+        // Handle search parameter
+        if ($request->has('search') && $request->search !== '') {
+            $searchTerm = $request->search;
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+        
         // Support multiple categories
         $categoriesParam = $request->input('categories');
         if ($categoriesParam) {
@@ -59,6 +65,7 @@ class ProductController extends Controller
             'products' => $products,
             'categories' => $categories,
             'selectedCategories' => $selectedCategories,
+            'searchTerm' => $request->input('search', ''),
         ]);
     }
 

@@ -58,12 +58,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/orders', [AdminDashboardController::class, 'orders'])->name('admin.orders');
+    
+    // Product management routes
     Route::get('/admin/products', [\App\Http\Controllers\AdminProductController::class, 'index'])->name('admin.products.index');
     Route::get('/admin/products/create', [\App\Http\Controllers\AdminProductController::class, 'create'])->name('admin.products.create');
     Route::post('/admin/products', [\App\Http\Controllers\AdminProductController::class, 'store'])->name('admin.products.store');
     Route::get('/admin/products/{product}/edit', [\App\Http\Controllers\AdminProductController::class, 'edit'])->name('admin.products.edit');
     Route::put('/admin/products/{product}', [\App\Http\Controllers\AdminProductController::class, 'update'])->name('admin.products.update');
     Route::delete('/admin/products/{product}', [\App\Http\Controllers\AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+    
+    // Category management routes
+    Route::get('/admin/categories', [\App\Http\Controllers\AdminCategoryController::class, 'index'])->name('admin.categories.index');
+    Route::get('/admin/categories/create', [\App\Http\Controllers\AdminCategoryController::class, 'create'])->name('admin.categories.create');
+    Route::post('/admin/categories', [\App\Http\Controllers\AdminCategoryController::class, 'store'])->name('admin.categories.store');
+    Route::get('/admin/categories/{category}/edit', [\App\Http\Controllers\AdminCategoryController::class, 'edit'])->name('admin.categories.edit');
+    Route::put('/admin/categories/{category}', [\App\Http\Controllers\AdminCategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('/admin/categories/{category}', [\App\Http\Controllers\AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
 });
 
 Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');

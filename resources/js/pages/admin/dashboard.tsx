@@ -210,9 +210,18 @@ export default function AdminDashboard() {
                                 <CardTitle>Quick Actions</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
-                                <Button className="w-full justify-start gap-3" variant="outline">
-                                    <Package className="h-4 w-4" />
-                                    Manage Products
+                                <Button className="w-full justify-start gap-3" variant="outline" asChild>
+                                    <Link href="/admin/products">
+                                        <Package className="h-4 w-4" />
+                                        Manage Products
+                                    </Link>
+                                </Button>
+
+                                <Button className="w-full justify-start gap-3" variant="outline" asChild>
+                                    <Link href="/admin/categories">
+                                        <BarChart3 className="h-4 w-4" />
+                                        Manage Categories
+                                    </Link>
                                 </Button>
 
                                 <Button className="w-full justify-start gap-3" variant="outline" asChild>
@@ -225,11 +234,6 @@ export default function AdminDashboard() {
                                 <Button className="w-full justify-start gap-3" variant="outline">
                                     <Users className="h-4 w-4" />
                                     Customer Management
-                                </Button>
-
-                                <Button className="w-full justify-start gap-3" variant="outline">
-                                    <BarChart3 className="h-4 w-4" />
-                                    Analytics
                                 </Button>
                             </CardContent>
                         </Card>

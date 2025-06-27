@@ -29,6 +29,10 @@ export default function AppSidebar() {
             href: '/admin/products',
             icon: Package2,
         },
+        {   title: 'Manage Categories',
+            href: '/admin/categories',
+            icon: Package2,
+        },
     ];
 
     const userNavItems: NavItem[] = [

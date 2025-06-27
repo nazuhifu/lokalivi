@@ -43,7 +43,6 @@ export function ProductFilters({
                 <h3 className="mb-4 text-lg font-medium">Filters</h3>
                 <Button variant="outline" className="w-full justify-between" onClick={handleClear}>
                     Clear All
-                    <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
             </div>
             <Collapsible defaultOpen>

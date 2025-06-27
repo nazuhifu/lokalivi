@@ -11,7 +11,6 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        // Get all categories with product count
         $categories = Category::withCount('products')->get()->map(function ($category) {
             return [
                 'id' => $category->id,
@@ -38,13 +37,11 @@ class CategoryController extends Controller
 
     private function getCategoryImage($categoryId)
     {
-        // First check if there's a database image_url
         $category = Category::find($categoryId);
         if ($category && $category->image_url) {
             return $category->image_url;
         }
 
-        // Fallback to file-based approach for existing images
         $extensions = ['png', 'jpg', 'jpeg'];
         foreach ($extensions as $ext) {
             $fullPath = public_path("images/category/{$categoryId}.{$ext}");

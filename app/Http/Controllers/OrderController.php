@@ -60,7 +60,6 @@ class OrderController extends Controller
         OrderItem::create($item);
       }
 
-      // Clear user's cart after successful order
       if ($userId) {
         $request->user()->carts()->delete();
       }

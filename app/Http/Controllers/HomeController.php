@@ -30,7 +30,7 @@ class HomeController extends Controller
             'id' => $category->id,
             'name' => $category->name,
             'products_count' => $category->products_count,
-            'image' => $this->getCategoryImage($category->id), // Use the same logic as CategoryController
+            'image' => $this->getCategoryImage($category->id),
         ];
     });
 

@@ -14,9 +14,6 @@ class AdminCategoryController extends Controller
         $categories = Category::withCount('products')->latest()->get()->map(function ($category) {
             $imageUrl = $this->getCategoryImage($category->id);
             
-            // Temporary debugging
-            \Log::info("Category {$category->id} ({$category->name}): image_url = {$imageUrl}");
-            
             return [
                 'id' => $category->id,
                 'name' => $category->name,
@@ -80,9 +77,7 @@ class AdminCategoryController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($category->image_url && str_starts_with($category->image_url, 'storage/')) {
                 Storage::disk('public')->delete(str_replace('storage/', '', $category->image_url));
             }
@@ -100,12 +95,10 @@ class AdminCategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        // Check if category has products
         if ($category->products()->count() > 0) {
             return back()->with('error', 'Cannot delete category with existing products.');
         }
 
-        // Delete image if exists
         if ($category->image_url && str_starts_with($category->image_url, 'storage/')) {
             Storage::disk('public')->delete(str_replace('storage/', '', $category->image_url));
         }
@@ -117,13 +110,11 @@ class AdminCategoryController extends Controller
 
     private function getCategoryImage($categoryId)
     {
-        // First check if there's a database image_url
         $category = Category::find($categoryId);
         if ($category && $category->image_url) {
             return $category->image_url;
         }
 
-        // Fallback to file-based approach for existing images
         $extensions = ['png', 'jpg', 'jpeg'];
         foreach ($extensions as $ext) {
             $fullPath = public_path("images/category/{$categoryId}.{$ext}");
@@ -133,7 +124,6 @@ class AdminCategoryController extends Controller
             }
         }
         
-        \Log::info("No image found for category {$categoryId}, using placeholder");
         return '/placeholder.svg';
     }
 } 

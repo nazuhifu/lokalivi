@@ -66,7 +66,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/products/{product}/edit', [\App\Http\Controllers\AdminProductController::class, 'edit'])->name('admin.products.edit');
     Route::put('/admin/products/{product}', [\App\Http\Controllers\AdminProductController::class, 'update'])->name('admin.products.update');
     Route::delete('/admin/products/{product}', [\App\Http\Controllers\AdminProductController::class, 'destroy'])->name('admin.products.destroy');
-    
+
+    // User management
+    Route::get('/admin/users', [\App\Http\Controllers\AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/{id}', [\App\Http\Controllers\AdminUserController::class, 'show'])->name('admin.users.show');
+    Route::delete('/admin/users/{id}', [\App\Http\Controllers\AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+
     // Category management routes
     Route::get('/admin/categories', [\App\Http\Controllers\AdminCategoryController::class, 'index'])->name('admin.categories.index');
     Route::get('/admin/categories/create', [\App\Http\Controllers\AdminCategoryController::class, 'create'])->name('admin.categories.create');

@@ -39,23 +39,23 @@ export function SiteFooter() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/categories/living-room" className="text-gray-300 hover:text-white">
-                                    Living Room
+                                <Link href="products?category=Table" className="text-gray-300 hover:text-white">
+                                    Table
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/categories/dining" className="text-gray-300 hover:text-white">
-                                    Dining
+                                <Link href="products?category=Chair" className="text-gray-300 hover:text-white">
+                                    Chair
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/categories/bedroom" className="text-gray-300 hover:text-white">
-                                    Bedroom
+                                <Link href="products?category=Sofa" className="text-gray-300 hover:text-white">
+                                    Sofa
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/categories/office" className="text-gray-300 hover:text-white">
-                                    Office
+                                <Link href="products?category=Bed" className="text-gray-300 hover:text-white">
+                                    Bed
                                 </Link>
                             </li>
                         </ul>

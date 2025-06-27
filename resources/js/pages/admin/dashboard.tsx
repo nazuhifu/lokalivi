@@ -4,10 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import DashboardSidebarLayout from '@/layouts/app/dashboard-sidebar-layout';
+import { formatPrice } from '@/lib/utils';
 import { Inertia } from '@inertiajs/inertia';
 import { Link, usePage } from '@inertiajs/react';
-import { BarChart3, DollarSign, Eye, LogOut, Package, Settings, ShoppingBag, TrendingDown, TrendingUp, Users } from 'lucide-react';
-import { formatPrice } from '@/lib/utils';
+import { BarChart3, DollarSign, Eye, LogOut, Package, ShoppingBag, TrendingDown, TrendingUp, Users } from 'lucide-react';
 
 interface Order {
     id: number;
@@ -66,15 +66,17 @@ export default function AdminDashboard() {
                         </div>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" className="gap-2">
-                            <Settings className="h-4 w-4" />
-                            Settings
-                        </Button>
                         <Button variant="outline" onClick={handleLogout} className="gap-2">
                             <LogOut className="h-4 w-4" />
                             Logout
                         </Button>
                     </div>
+                </div>
+
+                <div className="mb-4">
+                    <Link href="/admin/users">
+                        <Button variant="secondary">Manage Users</Button>
+                    </Link>
                 </div>
 
                 {/* Stats Cards */}
@@ -202,39 +204,6 @@ export default function AdminDashboard() {
                                         <p className="font-medium">{formatPrice(Number(product.revenue))}</p>
                                     </div>
                                 ))}
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Quick Actions</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                <Button className="w-full justify-start gap-3" variant="outline" asChild>
-                                    <Link href="/admin/products">
-                                        <Package className="h-4 w-4" />
-                                        Manage Products
-                                    </Link>
-                                </Button>
-
-                                <Button className="w-full justify-start gap-3" variant="outline" asChild>
-                                    <Link href="/admin/categories">
-                                        <BarChart3 className="h-4 w-4" />
-                                        Manage Categories
-                                    </Link>
-                                </Button>
-
-                                <Button className="w-full justify-start gap-3" variant="outline" asChild>
-                                    <Link href="/admin/orders">
-                                        <ShoppingBag className="h-4 w-4" />
-                                        View All Orders
-                                    </Link>
-                                </Button>
-
-                                <Button className="w-full justify-start gap-3" variant="outline">
-                                    <Users className="h-4 w-4" />
-                                    Customer Management
-                                </Button>
                             </CardContent>
                         </Card>
                     </div>

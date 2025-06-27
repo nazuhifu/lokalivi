@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/dashboard-layout';
 import { type BreadcrumbItem, type User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { formatPrice } from '@/lib/utils';
 
 interface Order {
     id: number;
@@ -46,8 +47,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 // Helper for formatting IDR currency
-function formatIDR(amount: number) {
-    return 'Rp' + amount.toLocaleString('id-ID', { maximumFractionDigits: 0 });
+function formatCurrency(amount: number) {
+    return formatPrice(amount);
 }
 
 function renderPaymentMethod(method?: string) {
@@ -141,7 +142,7 @@ export default function Dashboard() {
                                         <tr key={order.id}>
                                             <td className="px-4 py-2 font-medium">#{order.id}</td>
                                             <td className="px-4 py-2">{new Date(order.created_at).toLocaleDateString()}</td>
-                                            <td className="px-4 py-2">{formatIDR(order.total)}</td>
+                                            <td className="px-4 py-2">{formatCurrency(order.total)}</td>
                                             <td className="px-4 py-2">{order.status}</td>
                                             <td className="px-4 py-2">
                                                 <Button size="sm" variant="secondary" className="mr-2" onClick={() => openOrderModal(order)}>
@@ -199,7 +200,7 @@ export default function Dashboard() {
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="font-medium">Total</span>
-                                        <span className="text-lg font-bold text-[#8B5A2B]">{formatIDR(selectedOrder.total)}</span>
+                                        <span className="text-lg font-bold text-[#8B5A2B]">{formatCurrency(selectedOrder.total)}</span>
                                     </div>
                                 </div>
                             )}
@@ -302,7 +303,7 @@ export default function Dashboard() {
                                                         <tr key={item.id}>
                                                             <td className="px-4 py-2">{item.product?.name || 'Product'}</td>
                                                             <td className="px-4 py-2">{item.quantity}</td>
-                                                            <td className="px-4 py-2">{formatIDR(item.price)}</td>
+                                                            <td className="px-4 py-2">{formatCurrency(item.price)}</td>
                                                         </tr>
                                                     ),
                                                 )}

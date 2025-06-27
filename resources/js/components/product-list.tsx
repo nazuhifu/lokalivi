@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Products } from '@/types/product';
 import { Link, router } from '@inertiajs/react';
-import { Heart, ShoppingCart } from 'lucide-react';
+import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { toast } from 'sonner';
+import { formatPrice } from '@/lib/utils';
 
 export function ProductList({ products }: { products: Products[] }) {
     const addToCart = (product: Products) => {
@@ -62,7 +63,7 @@ export function ProductList({ products }: { products: Products[] }) {
                         <Link href={`/products/${product.id}`} className="block truncate text-lg font-medium hover:underline">
                             {product.name}
                         </Link>
-                        <div className="mt-1 font-semibold text-[#8B5A2B]">Rp{product.price.toLocaleString('id-ID')}</div>
+                        <div className="mt-1 font-semibold text-[#8B5A2B]">{formatPrice(product.price)}</div>
                     </div>
                     <div className="flex flex-col gap-2">
                         <Button variant="outline" size="icon" className="rounded-full" onClick={() => addToWishlist(product)}>

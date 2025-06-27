@@ -1,12 +1,13 @@
 'use client';
 
 import { Link, router } from '@inertiajs/react';
-import { Heart, ShoppingCart } from 'lucide-react';
+import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { formatPrice } from '@/lib/utils';
 
 import { Products } from '@/types/product';
 
@@ -83,7 +84,7 @@ export function ProductGrid({ products }: { products: Products[] }) {
                         <Link href={`/products/${product.id}`} className="mt-1 block text-lg font-medium hover:underline">
                             {product.name}
                         </Link>
-                        <div className="mt-2 font-semibold text-[#8B5A2B]">Rp{product.price.toLocaleString('id-ID')}</div>
+                        <div className="mt-2 font-semibold text-[#8B5A2B]">{formatPrice(product.price)}</div>
                     </CardContent>
                     <CardFooter className="flex gap-2 p-4 pt-0">
                         <Button variant="outline" size="icon" className="rounded-full" onClick={() => addToWishlist(product)}>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Slider } from '@/components/ui/slider';
+import { formatPrice } from '@/lib/utils';
 
 export function ProductFilters({
     categories,
@@ -85,8 +86,8 @@ export function ProductFilters({
                             onValueChange={(value) => setPriceRange(value as [number, number])}
                         />
                         <div className="flex items-center justify-between">
-                            <span className="text-sm">Rp{priceRange[0].toLocaleString('id-ID')}</span>
-                            <span className="text-sm">Rp{priceRange[1].toLocaleString('id-ID')}</span>
+                            <span className="text-sm">{formatPrice(priceRange[0])}</span>
+                            <span className="text-sm">{formatPrice(priceRange[1])}</span>
                         </div>
                     </div>
                 </CollapsibleContent>

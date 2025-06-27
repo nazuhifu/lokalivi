@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { formatPrice } from '@/lib/utils';
 import AppLayout from '@/layouts/app-layout';
 
 function SuccessModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -268,14 +270,14 @@ export default function CheckoutPage() {
                                                 {item.name}
                                                 {item.quantity > 1 ? ` (x${item.quantity})` : ''}
                                             </span>
-                                            <span>Rp {(item.price * item.quantity).toLocaleString()}</span>
+                                            <span>{formatPrice(item.price * item.quantity)}</span>
                                         </div>
                                     ))}
                                 </div>
                                 <Separator />
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
-                                    <span>Rp {subtotal.toLocaleString()}</span>
+                                    <span>{formatPrice(subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Shipping</span>
@@ -284,7 +286,7 @@ export default function CheckoutPage() {
                                 <Separator />
                                 <div className="flex justify-between font-medium">
                                     <span>Total</span>
-                                    <span>Rp {subtotal.toLocaleString()}</span>
+                                    <span>{formatPrice(subtotal)}</span>
                                 </div>
                             </CardContent>
                             <CardFooter className="flex flex-col gap-4">

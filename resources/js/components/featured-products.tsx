@@ -2,11 +2,12 @@
 
 import { Products } from '@/types/product';
 import { Link, router } from '@inertiajs/react';
-import { Eye, Heart, ShoppingCart } from 'lucide-react';
+import { Eye, Heart, ShoppingCart, Star } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { formatPrice } from '@/lib/utils';
 
 export function FeaturedProducts({ products }: { products: Products[] }) {
     const isLoggedIn = true; // Ganti dengan auth dari usePage().props jika sudah tersedia
@@ -91,9 +92,7 @@ export function FeaturedProducts({ products }: { products: Products[] }) {
                         >
                             {product.name}
                         </Link>
-                        <div className="text-2xl font-bold text-[#8B5A2B]">
-                            Rp{product.price.toLocaleString('id-ID')}
-                        </div>
+                        <div className="mt-2 font-semibold text-[#8B5A2B]">{formatPrice(product.price)}</div>
                     </CardContent>
                     {isLoggedIn ? (
                         <CardFooter className="flex gap-2 p-6 pt-0">

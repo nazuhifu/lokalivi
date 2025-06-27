@@ -1,6 +1,6 @@
 import type { PageProps } from '@/types';
 import type { CartItem } from '@/types/cart';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, Trash } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { formatPrice } from '@/lib/utils';
+import { toast } from 'sonner';
 
 export default function CartPage({ cart = [] }: PageProps<{ cart: CartItem[] }>) {
     const subtotal = cart.reduce((t, i) => t + i.price * i.quantity, 0);
@@ -56,7 +58,7 @@ export default function CartPage({ cart = [] }: PageProps<{ cart: CartItem[] }>)
                                                 <TableCell>
                                                     <div>
                                                         <div className="font-medium">{item.name}</div>
-                                                        <div className="text-sm text-muted-foreground">Rp{item.price.toLocaleString()} each</div>
+                                                        <div className="text-sm text-muted-foreground">{formatPrice(item.price)} each</div>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
@@ -85,7 +87,7 @@ export default function CartPage({ cart = [] }: PageProps<{ cart: CartItem[] }>)
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <div className="font-medium">Rp{(item.price * item.quantity).toLocaleString()}</div>
+                                                        <div className="font-medium">{formatPrice(item.price * item.quantity)}</div>
                                                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => remove(item.id)}>
                                                             <Trash className="h-4 w-4" />
                                                             <span className="sr-only">Remove</span>
@@ -129,11 +131,11 @@ export default function CartPage({ cart = [] }: PageProps<{ cart: CartItem[] }>)
                             <CardContent className="space-y-4">
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
-                                    <span>Rp{subtotal.toLocaleString()}</span>
+                                    <span>{formatPrice(subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Shipping</span>
-                                    <span>{shipping === 0 ? 'Free' : `Rp${shipping.toLocaleString()}`}</span>
+                                    <span>{shipping === 0 ? 'Free' : formatPrice(shipping)}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Input placeholder="Discount code" />
@@ -142,7 +144,7 @@ export default function CartPage({ cart = [] }: PageProps<{ cart: CartItem[] }>)
                                 <Separator />
                                 <div className="flex justify-between font-medium">
                                     <span>Total</span>
-                                    <span>Rp{total.toLocaleString()}</span>
+                                    <span>{formatPrice(total)}</span>
                                 </div>
                             </CardContent>
                             <CardFooter>

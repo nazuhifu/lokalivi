@@ -3,10 +3,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import DashboardSidebarLayout from '@/layouts/app/dashboard-sidebar-layout';
 import { Inertia } from '@inertiajs/inertia';
 import { Link, usePage } from '@inertiajs/react';
 import { BarChart3, DollarSign, Eye, LogOut, Package, Settings, ShoppingBag, TrendingDown, TrendingUp, Users } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 interface Order {
     id: number;
@@ -84,7 +86,7 @@ export default function AdminDashboard() {
                             <DollarSign className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">${Number(stats?.totalRevenue).toLocaleString()}</div>
+                            <div className="text-2xl font-bold">{formatPrice(Number(stats?.totalRevenue))}</div>
                             <p className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <TrendingUp className="h-3 w-3 text-green-500" />
                                 {/* You can add a real percentage if you want */}
@@ -156,7 +158,7 @@ export default function AdminDashboard() {
                                             </div>
                                             <div className="flex items-center gap-4">
                                                 <div className="text-right">
-                                                    <p className="font-medium">${Number(order.total).toLocaleString()}</p>
+                                                    <p className="font-medium">{formatPrice(Number(order.total))}</p>
                                                     <p className="text-sm text-muted-foreground">{order.date}</p>
                                                 </div>
                                                 <Badge
@@ -198,7 +200,7 @@ export default function AdminDashboard() {
                                             <p className="text-sm font-medium">{product.name}</p>
                                             <p className="text-xs text-muted-foreground">{product.sales} sales</p>
                                         </div>
-                                        <p className="font-medium">${Number(product.revenue).toLocaleString()}</p>
+                                        <p className="font-medium">{formatPrice(Number(product.revenue))}</p>
                                     </div>
                                 ))}
                             </CardContent>

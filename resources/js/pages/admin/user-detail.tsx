@@ -2,16 +2,20 @@ import { Button } from '@/components/ui/button';
 import DashboardSidebarLayout from '@/layouts/app/dashboard-sidebar-layout';
 import { Link, usePage } from '@inertiajs/react';
 
-interface User {
+type User = {
     id: number;
     name: string;
     email: string;
     is_admin: boolean;
     created_at: string;
-}
+};
+
+type PageProps = {
+    user: User;
+};
 
 export default function AdminUserDetail() {
-    const user = (usePage().props as any).user;
+    const user = usePage<PageProps>().props.user;
 
     return (
         <DashboardSidebarLayout>

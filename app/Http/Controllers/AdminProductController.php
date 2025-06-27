@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,21 +36,43 @@ class AdminProductController extends Controller
       'category_id' => 'required|exists:categories,id',
       'price' => 'required|numeric',
       'stock_quantity' => 'required|integer|min:0',
-      'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+      'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+      'features' => 'nullable|string',
+      'specifications' => 'nullable|string',
     ]);
 
-    if ($request->hasFile('image')) {
-      $path = $request->file('image')->store('products', 'public');
-      $data['image_url'] = 'storage/' . $path;
+    // Parse JSON fields
+    if (isset($data['features'])) {
+      $data['features'] = json_decode($data['features'], true);
+    }
+    if (isset($data['specifications'])) {
+      $data['specifications'] = json_decode($data['specifications'], true);
     }
 
-    Product::create($data);
+    // Create the product
+    $product = Product::create($data);
+
+    // Handle multiple image uploads
+    if ($request->hasFile('images')) {
+      $images = $request->file('images');
+      foreach ($images as $index => $image) {
+        $path = $image->store('products', 'public');
+        ProductImage::create([
+          'product_id' => $product->id,
+          'image_url' => 'storage/' . $path,
+          'sort_order' => $index,
+          'is_primary' => $index === 0, // First image is primary
+        ]);
+      }
+    }
+
     return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
   }
 
   public function edit(Product $product)
   {
     $categories = Category::all();
+    $product->load('productImages');
     return Inertia::render('admin/product-form', [
       'categories' => $categories,
       'product' => $product,
@@ -64,27 +87,62 @@ class AdminProductController extends Controller
       'category_id' => 'required|exists:categories,id',
       'price' => 'required|numeric',
       'stock_quantity' => 'required|integer|min:0',
-      'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+      'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+      'features' => 'nullable|string',
+      'specifications' => 'nullable|string',
     ]);
 
-    if ($request->hasFile('image')) {
-      // Delete old image if exists
-      if ($product->image_url && str_starts_with($product->image_url, 'storage/')) {
-        Storage::disk('public')->delete(str_replace('storage/', '', $product->image_url));
-      }
-      $path = $request->file('image')->store('products', 'public');
-      $data['image_url'] = 'storage/' . $path;
+    // Parse JSON fields
+    if (isset($data['features'])) {
+      $data['features'] = json_decode($data['features'], true);
+    }
+    if (isset($data['specifications'])) {
+      $data['specifications'] = json_decode($data['specifications'], true);
     }
 
+    // Update the product
     $product->update($data);
+
+    // Handle multiple image uploads
+    if ($request->hasFile('images')) {
+      // Delete existing images
+      foreach ($product->productImages as $image) {
+        if (str_starts_with($image->image_url, 'storage/')) {
+          Storage::disk('public')->delete(str_replace('storage/', '', $image->image_url));
+        }
+        $image->delete();
+      }
+
+      // Upload new images
+      $images = $request->file('images');
+      foreach ($images as $index => $image) {
+        $path = $image->store('products', 'public');
+        ProductImage::create([
+          'product_id' => $product->id,
+          'image_url' => 'storage/' . $path,
+          'sort_order' => $index,
+          'is_primary' => $index === 0, // First image is primary
+        ]);
+      }
+    }
+
     return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
   }
 
   public function destroy(Product $product)
   {
+    // Delete all product images
+    foreach ($product->productImages as $image) {
+      if (str_starts_with($image->image_url, 'storage/')) {
+        Storage::disk('public')->delete(str_replace('storage/', '', $image->image_url));
+      }
+    }
+
+    // Delete old single image if exists
     if ($product->image_url && str_starts_with($product->image_url, 'storage/')) {
       Storage::disk('public')->delete(str_replace('storage/', '', $product->image_url));
     }
+
     $product->delete();
     return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
   }

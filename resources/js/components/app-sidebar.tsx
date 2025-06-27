@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { LayoutGrid, Package2 } from 'lucide-react';
+import { LayoutGrid, Package2, User } from 'lucide-react';
 
 interface PageProps {
     auth?: {
@@ -28,6 +28,11 @@ export default function AppSidebar() {
             title: 'Manage Products',
             href: '/admin/products',
             icon: Package2,
+        },
+        {
+            title: 'Manage User',
+            href: '/admin/users',
+            icon: User,
         },
     ];
 

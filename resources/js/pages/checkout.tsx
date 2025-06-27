@@ -36,6 +36,19 @@ function SuccessModal({ open, onClose }: { open: boolean; onClose: () => void })
     );
 }
 
+type CartItem = {
+    id: number;
+    product_id: number;
+    name: string;
+    quantity: number;
+    price: number;
+};
+
+type PageProps = {
+    cart: CartItem[];
+    orderSuccess: boolean;
+};
+
 type CheckoutForm = {
     shipping: {
         first_name: string;
@@ -62,12 +75,10 @@ type CheckoutForm = {
 };
 
 export default function CheckoutPage() {
-    const props = usePage().props as any;
-    const cart = props.cart || [];
-    const orderSuccess = props.orderSuccess || false;
+    const { cart = [], orderSuccess = false } = usePage<PageProps>().props;
     const [showModal, setShowModal] = useState(false);
 
-    const { data, setData, post, processing, errors } = useForm<CheckoutForm>({
+    const { data, setData, post, processing } = useForm<CheckoutForm>({
         shipping: {
             first_name: '',
             last_name: '',
@@ -95,15 +106,18 @@ export default function CheckoutPage() {
     useEffect(() => {
         setData(
             'items',
-            cart.map((item: any) => ({ product_id: item.product_id, quantity: item.quantity })),
+            cart.map((item: CartItem) => ({
+                product_id: item.product_id,
+                quantity: item.quantity,
+            })),
         );
-    }, [cart]);
+    }, [cart, setData]);
 
     useEffect(() => {
         if (orderSuccess) setShowModal(true);
     }, [orderSuccess]);
 
-    const subtotal = cart.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
+    const subtotal = cart.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0);
 
     const handleShippingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData('shipping', {
@@ -248,7 +262,7 @@ export default function CheckoutPage() {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
-                                    {cart.map((item: any) => (
+                                    {cart.map((item: CartItem) => (
                                         <div key={item.id} className="flex justify-between">
                                             <span>
                                                 {item.name}
@@ -291,7 +305,7 @@ export default function CheckoutPage() {
     );
 }
 
-// Reusable form components
+// Reusable Components
 function InputGroup({
     id,
     label,

@@ -22,7 +22,7 @@ export interface NavItem {
     isActive?: boolean;
 }
 
-export type PageProps<T = {}> = T & {
+export type PageProps<T = Record<string, unknown>> = T & {
     auth: Auth;
     ziggy: Config & { location: string };
 };

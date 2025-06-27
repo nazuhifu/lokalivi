@@ -1,8 +1,7 @@
-import AppLogoIcon from '@/components/app-logo-icon';
-import { Link } from '@inertiajs/react';
-import { type PropsWithChildren } from 'react';
-import { Package2 } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
+import { Link } from '@inertiajs/react';
+import { Package2 } from 'lucide-react';
+import { type PropsWithChildren } from 'react';
 
 interface AuthLayoutProps {
     name?: string;

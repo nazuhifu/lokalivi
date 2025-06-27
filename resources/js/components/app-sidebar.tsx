@@ -33,6 +33,7 @@ export default function AppSidebar() {
             title: 'Manage User',
             href: '/admin/users',
             icon: User,
+        },
         {   
             title: 'Manage Categories',
             href: '/admin/categories',

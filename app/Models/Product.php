@@ -69,7 +69,13 @@ class Product extends Model
             return $this->images[0];
         }
 
-        return $this->image_url;
+        // Fallback to single image_url
+        if ($this->image_url) {
+            return $this->image_url;
+        }
+
+        // Final fallback to placeholder
+        return '/placeholder.svg';
     }
 
     public function getAllImagesAttribute()
@@ -85,6 +91,11 @@ class Product extends Model
         }
 
         // Fallback to single image_url
-        return $this->image_url ? [$this->image_url] : [];
+        if ($this->image_url) {
+            return [$this->image_url];
+        }
+
+        // Final fallback to placeholder
+        return ['/placeholder.svg'];
     }
 }

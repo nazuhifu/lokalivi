@@ -9,9 +9,6 @@ use Inertia\Inertia;
 
 class CartController extends Controller
 {
-    /**
-     * Menampilkan isi keranjang pengguna
-     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -31,9 +28,6 @@ class CartController extends Controller
         ]);
     }
 
-    /**
-     * Menambahkan produk ke keranjang
-     */
     public function store(Request $request)
     {
         $data = $request->validate([

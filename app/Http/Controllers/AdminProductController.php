@@ -71,7 +71,7 @@ class AdminProductController extends Controller
           'product_id' => $product->id,
           'image_url' => 'storage/' . $path,
           'sort_order' => $index,
-          'is_primary' => $index === 0, // First image is primary
+          'is_primary' => $index === 0,
         ]);
       }
     }
@@ -150,7 +150,7 @@ class AdminProductController extends Controller
           'product_id' => $product->id,
           'image_url' => 'storage/' . $path,
           'sort_order' => $index,
-          'is_primary' => $index === 0, // First image is primary
+          'is_primary' => $index === 0,
         ]);
       }
     }

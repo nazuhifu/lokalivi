@@ -10,10 +10,12 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductReviewController;
 use App\Models\User;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
 
@@ -27,6 +29,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
+    // Product review routes
+    Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/products/{product}/reviews/{review}', [ProductReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/products/{product}/reviews/{review}', [ProductReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

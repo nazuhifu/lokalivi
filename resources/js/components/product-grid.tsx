@@ -73,7 +73,7 @@ export function ProductGrid({ products }: { products: Products[] }) {
                 >
                     <div className="relative aspect-square overflow-hidden">
                         <img
-                            src={product.image_url || '/placeholder.svg'}
+                            src={product.main_image || product.image_url || '/placeholder.svg'}
                             alt={product.name}
                             className="h-full w-full object-cover transition-transform hover:scale-105"
                         />

@@ -39,6 +39,7 @@ class ProductController extends Controller
                 'price' => $product->price,
                 'stock_quantity' => $product->stock_quantity,
                 'image_url' => $product->image_url,
+                'main_image' => $product->main_image,
             ];
         });
 
@@ -58,6 +59,53 @@ class ProductController extends Controller
             'products' => $products,
             'categories' => $categories,
             'selectedCategories' => $selectedCategories,
+        ]);
+    }
+
+    public function show(Product $product)
+    {
+        $product->load(['category', 'reviews.user', 'productImages']);
+
+        // Get related products from the same category
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->limit(4)
+            ->get()
+            ->map(function ($relatedProduct) {
+                return [
+                    'id' => $relatedProduct->id,
+                    'name' => $relatedProduct->name,
+                    'price' => $relatedProduct->price,
+                    'image_url' => $relatedProduct->main_image,
+                    'rating' => $relatedProduct->rating,
+                ];
+            });
+
+        return Inertia::render('product-detail', [
+            'product' => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'category' => $product->category->name ?? 'Uncategorized',
+                'price' => $product->price,
+                'stock_quantity' => $product->stock_quantity,
+                'image_url' => $product->main_image,
+                'images' => $product->all_images,
+                'features' => $product->features ?? [],
+                'specifications' => $product->specifications ?? [],
+                'rating' => $product->rating,
+                'review_count' => $product->review_count,
+                'reviews' => $product->reviews->map(function ($review) {
+                    return [
+                        'id' => $review->id,
+                        'rating' => $review->rating,
+                        'comment' => $review->comment,
+                        'user_name' => $review->user->name,
+                        'created_at' => $review->created_at->format('M d, Y'),
+                    ];
+                }),
+            ],
+            'relatedProducts' => $relatedProducts,
         ]);
     }
 

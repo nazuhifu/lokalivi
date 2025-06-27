@@ -23,10 +23,9 @@ type CategoryPageProps = PageProps<{
 }>;
 
 export default function CategoryPage({ category, products }: CategoryPageProps) {
-    // Derive categories from products (for demo, just use the current category)
     const categories = useMemo(() => [{ id: 1, name: category.name }], [category.name]);
 
-    // Derive min/max price from products
+    // Calculate min and max prices from products
     const prices = products.map((p) => p.price);
     const minPrice = Math.min(...prices);
     const maxPrice = Math.max(...prices);

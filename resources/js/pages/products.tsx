@@ -82,7 +82,7 @@ export default function ProductsPage({
         router.get('/products', params, { preserveState: true });
     };
 
-    // Filter and sort products client-side (except for category and search, which are now server-side)
+    // Filter and sort products client-side (except for category and search)
     const filteredProducts = useMemo(() => {
         let result = products.filter((product) => {
             const inPrice = Number(product.price) >= priceRange[0] && Number(product.price) <= priceRange[1];
@@ -110,7 +110,6 @@ export default function ProductsPage({
         return result;
     }, [products, priceRange, sortBy]);
 
-    // For title/description - only use the actual search term from server, not local input
     const title = initialSearchTerm 
         ? `Search Results for "${initialSearchTerm}"`
         : selectedCategories && selectedCategories.length === 1

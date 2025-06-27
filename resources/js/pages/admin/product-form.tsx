@@ -13,15 +13,40 @@ interface ImageFile {
     id: string;
 }
 
+interface Category {
+    id: number;
+    name: string;
+}
+
+interface Product {
+    id?: number;
+    name?: string;
+    description?: string;
+    category_id?: number;
+    price?: number;
+    stock_quantity?: number;
+    features?: string[];
+    specifications?: Record<string, string>;
+    product_images?: Array<{
+        id: number;
+        image_url: string;
+    }>;
+}
+
+interface PageProps {
+    categories?: Category[];
+    product?: Product;
+}
+
 export default function AdminProductForm() {
-    const { categories, product } = usePage().props as any;
+    const { categories, product } = usePage().props as PageProps;
     const isEdit = !!product;
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [form, setForm] = useState({
         name: product?.name || '',
         description: product?.description || '',
-        category_id: product?.category_id?.toString() || (categories[0]?.id?.toString() ?? ''),
+        category_id: product?.category_id?.toString() || (categories?.[0]?.id?.toString() ?? ''),
         price: product?.price?.toString() || '',
         stock_quantity: product?.stock_quantity?.toString() || '',
         features: product?.features || [''],
@@ -29,12 +54,12 @@ export default function AdminProductForm() {
     });
 
     const [images, setImages] = useState<ImageFile[]>([]);
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     // Initialize images from existing product
     useEffect(() => {
         if (product?.product_images && product.product_images.length > 0) {
-            const existingImages = product.product_images.map((img: any, index: number) => ({
+            const existingImages = product.product_images.map((img) => ({
                 id: `existing-${img.id}`,
                 url: img.image_url,
                 isExisting: true,
@@ -64,7 +89,7 @@ export default function AdminProductForm() {
             }
         });
 
-        if (isEdit) {
+        if (isEdit && product?.id) {
             formData.append('_method', 'PUT');
             router.post(`/admin/products/${product.id}`, formData, {
                 onError: (err) => setErrors(err),
@@ -96,21 +121,21 @@ export default function AdminProductForm() {
         });
     };
 
-    const moveImage = (fromIndex: number, toIndex: number) => {
-        setImages((prev) => {
-            const newImages = [...prev];
-            const [movedImage] = newImages.splice(fromIndex, 1);
-            newImages.splice(toIndex, 0, movedImage);
-            return newImages;
-        });
-    };
+    // const moveImage = (fromIndex: number, toIndex: number) => {
+    //     setImages((prev) => {
+    //         const newImages = [...prev];
+    //         const [movedImage] = newImages.splice(fromIndex, 1);
+    //         newImages.splice(toIndex, 0, movedImage);
+    //         return newImages;
+    //     });
+    // };
 
     const addFeature = () => {
         setForm({ ...form, features: [...form.features, ''] });
     };
 
     const removeFeature = (index: number) => {
-        const newFeatures = form.features.filter((_: any, i: number) => i !== index);
+        const newFeatures = form.features.filter((_: string, i: number) => i !== index);
         setForm({ ...form, features: newFeatures });
     };
 
@@ -160,7 +185,7 @@ export default function AdminProductForm() {
                             onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                             className="w-full rounded-md border px-3 py-2"
                         >
-                            {categories.map((cat: any) => (
+                            {(categories || []).map((cat: Category) => (
                                 <option key={cat.id} value={cat.id.toString()}>
                                     {cat.name}
                                 </option>

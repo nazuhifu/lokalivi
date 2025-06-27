@@ -8,8 +8,40 @@ import { Inertia } from '@inertiajs/inertia';
 import { Link, usePage } from '@inertiajs/react';
 import { BarChart3, DollarSign, Eye, LogOut, Package, Settings, ShoppingBag, TrendingDown, TrendingUp, Users } from 'lucide-react';
 
+interface Order {
+    id: number;
+    customer: string;
+    total: number;
+    date: string;
+    status: string;
+}
+
+interface Product {
+    name: string;
+    sales: number;
+    revenue: number;
+}
+
+interface Stats {
+    totalRevenue: number;
+    totalOrders: number;
+    totalUsers: number;
+    totalProducts: number;
+    recentOrders: Order[];
+    topProducts: Product[];
+}
+
+interface PageProps {
+    stats?: Stats;
+    auth?: {
+        user?: {
+            name: string;
+        };
+    };
+}
+
 export default function AdminDashboard() {
-    const { stats, auth } = usePage().props as any;
+    const { stats, auth } = usePage().props as PageProps;
     const user = auth?.user;
 
     const handleLogout = () => {
@@ -52,7 +84,7 @@ export default function AdminDashboard() {
                             <DollarSign className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">${Number(stats.totalRevenue).toLocaleString()}</div>
+                            <div className="text-2xl font-bold">${Number(stats?.totalRevenue).toLocaleString()}</div>
                             <p className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <TrendingUp className="h-3 w-3 text-green-500" />
                                 {/* You can add a real percentage if you want */}
@@ -67,7 +99,7 @@ export default function AdminDashboard() {
                             <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{stats.totalOrders.toLocaleString()}</div>
+                            <div className="text-2xl font-bold">{stats?.totalOrders.toLocaleString()}</div>
                             <p className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <TrendingUp className="h-3 w-3 text-green-500" />
                                 +8% from last month
@@ -81,7 +113,7 @@ export default function AdminDashboard() {
                             <Users className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
+                            <div className="text-2xl font-bold">{stats?.totalUsers.toLocaleString()}</div>
                             <p className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <TrendingUp className="h-3 w-3 text-green-500" />
                                 +15% from last month
@@ -95,7 +127,7 @@ export default function AdminDashboard() {
                             <Package className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{stats.totalProducts}</div>
+                            <div className="text-2xl font-bold">{stats?.totalProducts}</div>
                             <p className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <TrendingDown className="h-3 w-3 text-red-500" />
                                 -2% from last month
@@ -114,7 +146,7 @@ export default function AdminDashboard() {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    {stats.recentOrders.map((order: any) => (
+                                    {stats?.recentOrders.map((order: Order) => (
                                         <div key={order.id} className="flex items-center justify-between rounded-lg border p-4">
                                             <div className="flex items-center gap-4">
                                                 <div>
@@ -160,7 +192,7 @@ export default function AdminDashboard() {
                                 <CardDescription>Best performing products this month</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {stats.topProducts.map((product: any, index: number) => (
+                                {stats?.topProducts.map((product: Product, index: number) => (
                                     <div key={index} className="flex items-center justify-between">
                                         <div>
                                             <p className="text-sm font-medium">{product.name}</p>

@@ -6,6 +6,38 @@ import { type BreadcrumbItem, type User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
+interface Order {
+    id: number;
+    created_at: string;
+    total: number;
+    status: string;
+    items: OrderItem[];
+    shipping?: {
+        first_name: string;
+        last_name: string;
+        email: string;
+        phone: string;
+        address: string;
+        city: string;
+        state: string;
+        zip: string;
+        country: string;
+    };
+    payment?: {
+        method: string;
+        bank_name?: string;
+        ewallet_type?: string;
+        ewallet_number?: string;
+    };
+}
+
+interface OrderItem {
+    id: number;
+    product?: { name?: string };
+    quantity: number;
+    price: number;
+}
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
@@ -34,13 +66,13 @@ function renderPaymentMethod(method?: string) {
 }
 
 export default function Dashboard() {
-    const { props } = usePage<{ user: User; orders: any[] }>();
-    const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+    const { props } = usePage<{ user: User; orders: Order[] }>();
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [deleteOrderId, setDeleteOrderId] = useState<number | null>(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-    const openOrderModal = (order: any) => {
+    const openOrderModal = (order: Order) => {
         setSelectedOrder(order);
         setShowModal(true);
     };
@@ -105,7 +137,7 @@ export default function Dashboard() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100 bg-white">
-                                    {props.orders.map((order: any) => (
+                                    {props.orders.map((order: Order) => (
                                         <tr key={order.id}>
                                             <td className="px-4 py-2 font-medium">#{order.id}</td>
                                             <td className="px-4 py-2">{new Date(order.created_at).toLocaleDateString()}</td>
@@ -266,13 +298,14 @@ export default function Dashboard() {
                                         </thead>
                                         <tbody>
                                             {selectedOrder.items &&
-                                                selectedOrder.items.map((item: any) => (
-                                                    <tr key={item.id}>
-                                                        <td className="px-4 py-2">{item.product?.name || 'Product'}</td>
-                                                        <td className="px-4 py-2">{item.quantity}</td>
-                                                        <td className="px-4 py-2">{formatIDR(item.price)}</td>
-                                                    </tr>
-                                                ))}
+                                                selectedOrder.items.map((item: OrderItem) => (
+                                                        <tr key={item.id}>
+                                                            <td className="px-4 py-2">{item.product?.name || 'Product'}</td>
+                                                            <td className="px-4 py-2">{item.quantity}</td>
+                                                            <td className="px-4 py-2">{formatIDR(item.price)}</td>
+                                                        </tr>
+                                                    ),
+                                                )}
                                         </tbody>
                                     </table>
                                 </div>

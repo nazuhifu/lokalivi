@@ -1,12 +1,26 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import AppLayout from '@/layouts/app-layout';
+import DashboardSidebarLayout from '@/layouts/app/dashboard-sidebar-layout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Pencil, Plus, Trash } from 'lucide-react';
-import DashboardSidebarLayout from '@/layouts/app/dashboard-sidebar-layout';
+
+interface Product {
+    id: number;
+    name: string;
+    image_url?: string;
+    price: number;
+    stock_quantity: number;
+    category?: {
+        name: string;
+    };
+}
+
+interface PageProps {
+    products?: Product[];
+}
 
 export default function AdminProducts() {
-    const { products } = usePage().props as any;
+    const { products } = usePage().props as PageProps;
 
     const handleDelete = (id: number) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
@@ -38,7 +52,7 @@ export default function AdminProducts() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 bg-white">
-                            {products.map((product: any) => (
+                            {(products || []).map((product: Product) => (
                                 <tr key={product.id}>
                                     <td className="px-4 py-2">
                                         <img

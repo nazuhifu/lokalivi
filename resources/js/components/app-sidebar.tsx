@@ -5,8 +5,16 @@ import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { LayoutGrid, Package2 } from 'lucide-react';
 
-export function AppSidebar() {
-    const { auth } = usePage().props as any;
+interface PageProps {
+    auth?: {
+        user?: {
+            is_admin?: boolean;
+        };
+    };
+}
+
+export default function AppSidebar() {
+    const { auth } = usePage().props as PageProps;
     const user = auth?.user;
     const isAdmin = !!user?.is_admin;
 

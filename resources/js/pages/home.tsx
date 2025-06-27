@@ -9,7 +9,14 @@ import { Button } from '@/components/ui/button';
 
 import { Products } from '@/types/product';
 
-export default function Home({ featuredProducts }: { featuredProducts: Products[] }) {
+type Category = {
+    id: number;
+    name: string;
+    products_count: number;
+    image: string;
+};
+
+export default function Home({ featuredProducts, categories }: { featuredProducts: Products[], categories: Category[] }) {
     return (
         <AppLayout>
             <Head title="Home" />
@@ -85,7 +92,7 @@ export default function Home({ featuredProducts }: { featuredProducts: Products[
                 <section className="bg-[#f8f5f0] py-20">
                     <div className="container mx-auto px-4 md:px-6 lg:px-20">
                         <h2 className="mb-12 text-center text-4xl font-bold tracking-tight">Shop by Category</h2>
-                        <CategoryShowcase />
+                        <CategoryShowcase categories={categories} />
                     </div>
                 </section>
 

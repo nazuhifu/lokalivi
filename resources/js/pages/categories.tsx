@@ -9,6 +9,7 @@ type Category = {
     id: number;
     name: string;
     products_count: number;
+    image: string;
 };
 
 export default function CategoriesPage({ categories }: { categories: Category[] }) {
@@ -28,13 +29,13 @@ export default function CategoriesPage({ categories }: { categories: Category[] 
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {categories.map((category) => (
                         <Link
-                            key={category.name}
+                            key={category.id}
                             href={`/products?category=${encodeURIComponent(category.name)}`}
                             className="group overflow-hidden rounded-lg border shadow-sm transition-all hover:scale-105 hover:shadow-md"
                         >
                             <div className="aspect-[4/3] w-full overflow-hidden">
                                 <img
-                                    src={'/placeholder.svg'}
+                                    src={category.image || '/placeholder.svg'}
                                     alt={category.name}
                                     width={600}
                                     height={400}

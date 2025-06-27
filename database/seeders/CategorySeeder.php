@@ -15,10 +15,6 @@ class CategorySeeder extends Seeder
             ['name' => 'Table'],
             ['name' => 'Sofa'],
             ['name' => 'Bed'],
-            ['name' => 'Desk'],
-            ['name' => 'Cabinet'],
-            ['name' => 'Shelf'],
-            ['name' => 'Wardrobe'],
         ];
 
         $extensions = ['jpg', 'jpeg', 'png'];

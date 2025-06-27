@@ -2,7 +2,7 @@
 
 import { Products } from '@/types/product';
 import { Link, router } from '@inertiajs/react';
-import { Eye, Heart, ShoppingCart, Star } from 'lucide-react';
+import { Eye, Heart, ShoppingCart } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Link, router } from '@inertiajs/react';
-import { Heart, ShoppingCart, Star } from 'lucide-react';
+import { Heart, ShoppingCart } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';

@@ -1,6 +1,6 @@
 import type { PageProps } from '@/types';
 import type { CartItem } from '@/types/cart';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, Trash } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,6 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { formatPrice } from '@/lib/utils';
-import { toast } from 'sonner';
 
 export default function CartPage({ cart = [] }: PageProps<{ cart: CartItem[] }>) {
     const subtotal = cart.reduce((t, i) => t + i.price * i.quantity, 0);

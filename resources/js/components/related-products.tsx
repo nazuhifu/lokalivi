@@ -1,8 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Star } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { formatPrice } from '@/lib/utils';
 
 interface RelatedProductsProps {

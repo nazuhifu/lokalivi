@@ -1,9 +1,9 @@
 'use client';
 
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 
 import { Heart, LogOut, Menu, Package2, Search, ShoppingCart, User, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +29,20 @@ export function SiteHeader() {
     const cartCount = cart?.count ?? 0;
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    // Determine if on home page
+    const isHome = typeof window !== 'undefined' && window.location.pathname === '/';
+
+    useEffect(() => {
+        if (!isHome) return;
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // set initial state
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isHome]);
 
     // Handle search submission
     const handleSearch = (e: React.FormEvent) => {
@@ -50,7 +64,15 @@ export function SiteHeader() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <header
+            className={`sticky top-0 z-50 w-full transition-colors duration-300 ${
+                isHome
+                    ? isScrolled
+                        ? 'border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60'
+                        : 'border-b border-transparent bg-transparent'
+                    : 'border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60'
+            } `}
+        >
             <div className="container mx-auto px-4 sm:px-6 lg:px-20">
                 <div className="flex h-16 items-center justify-between">
                     {/* Left side - Mobile menu + Logo */}
@@ -83,9 +105,9 @@ export function SiteHeader() {
                                         <form onSubmit={handleMobileSearch}>
                                             <div className="relative">
                                                 <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-                                                <Input 
-                                                    placeholder="Search products..." 
-                                                    className="h-10 pl-10 text-sm" 
+                                                <Input
+                                                    placeholder="Search products..."
+                                                    className="h-10 pl-10 text-sm"
                                                     value={searchTerm}
                                                     onChange={(e) => setSearchTerm(e.target.value)}
                                                     onKeyDown={(e) => {
@@ -168,7 +190,7 @@ export function SiteHeader() {
                                                             <LogOut className="h-5 w-5" />
                                                             <span className="font-medium">Logout</span>
                                                         </Link>
-                                                        </SheetClose>
+                                                    </SheetClose>
                                                 </>
                                             ) : (
                                                 <SheetClose asChild>
@@ -242,10 +264,10 @@ export function SiteHeader() {
                         {/* Search */}
                         {isSearchOpen ? (
                             <form onSubmit={handleSearch} className="hidden items-center gap-2 md:flex">
-                                <Input 
-                                    placeholder="Search products..." 
-                                    className="h-9 w-64 text-sm" 
-                                    autoFocus 
+                                <Input
+                                    placeholder="Search products..."
+                                    className="h-9 w-64 text-sm"
+                                    autoFocus
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     onKeyDown={(e) => {

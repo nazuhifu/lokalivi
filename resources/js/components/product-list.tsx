@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Products } from '@/types/product';
 import { Link, router } from '@inertiajs/react';
-import { Heart, ShoppingCart, Star } from 'lucide-react';
+import { Heart, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatPrice } from '@/lib/utils';
 

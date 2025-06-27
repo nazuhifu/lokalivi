@@ -2,10 +2,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/dashboard-layout';
+import { formatPrice } from '@/lib/utils';
 import { type BreadcrumbItem, type User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { formatPrice } from '@/lib/utils';
 
 interface Order {
     id: number;
@@ -300,13 +300,12 @@ export default function Dashboard() {
                                         <tbody>
                                             {selectedOrder.items &&
                                                 selectedOrder.items.map((item: OrderItem) => (
-                                                        <tr key={item.id}>
-                                                            <td className="px-4 py-2">{item.product?.name || 'Product'}</td>
-                                                            <td className="px-4 py-2">{item.quantity}</td>
-                                                            <td className="px-4 py-2">{formatCurrency(item.price)}</td>
-                                                        </tr>
-                                                    ),
-                                                )}
+                                                    <tr key={item.id}>
+                                                        <td className="px-4 py-2">{item.product?.name || 'Product'}</td>
+                                                        <td className="px-4 py-2">{item.quantity}</td>
+                                                        <td className="px-4 py-2">{formatCurrency(item.price)}</td>
+                                                    </tr>
+                                                ))}
                                         </tbody>
                                     </table>
                                 </div>

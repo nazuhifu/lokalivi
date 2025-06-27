@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react"
+import { Link } from '@inertiajs/react';
 
 type Category = {
     id: number;
@@ -18,11 +18,11 @@ export function CategoryShowcase({ categories = [] }: CategoryShowcaseProps) {
                 <Link
                     key={category.id}
                     href={`/products?category=${encodeURIComponent(category.name)}`}
-                    className="group relative overflow-hidden rounded-lg transition-all hover:shadow-lg hover:scale-105"
+                    className="group relative overflow-hidden rounded-lg transition-all hover:scale-105 hover:shadow-lg"
                 >
                     <div className="aspect-square w-full overflow-hidden">
                         <img
-                            src={category.image || "/placeholder.svg"}
+                            src={category.image || '/placeholder.svg'}
                             alt={category.name}
                             width={600}
                             height={400}
@@ -36,5 +36,5 @@ export function CategoryShowcase({ categories = [] }: CategoryShowcaseProps) {
                 </Link>
             ))}
         </div>
-    )
+    );
 }

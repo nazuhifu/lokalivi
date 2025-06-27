@@ -1,6 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { Filter, Grid, List } from 'lucide-react';
-import { useMemo, useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ProductFilters } from '@/components/product-filters';
 import { ProductGrid } from '@/components/product-grid';
@@ -11,14 +11,14 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { Products } from '@/types/product';
 
-export default function ProductsPage({ 
-    products, 
-    categories, 
+export default function ProductsPage({
+    products,
+    categories,
     selectedCategories: initialSelectedCategories,
-    searchTerm: initialSearchTerm = ''
-}: { 
-    products: Products[]; 
-    categories: { id: number; name: string }[]; 
+    searchTerm: initialSearchTerm = '',
+}: {
+    products: Products[];
+    categories: { id: number; name: string }[];
     selectedCategories?: string[];
     searchTerm?: string;
 }) {
@@ -111,16 +111,16 @@ export default function ProductsPage({
     }, [products, priceRange, sortBy]);
 
     // For title/description - only use the actual search term from server, not local input
-    const title = initialSearchTerm 
+    const title = initialSearchTerm
         ? `Search Results for "${initialSearchTerm}"`
         : selectedCategories && selectedCategories.length === 1
-        ? `${selectedCategories[0]} Products`
-        : 'All Products';
+          ? `${selectedCategories[0]} Products`
+          : 'All Products';
     const description = initialSearchTerm
         ? `Showing results for "${initialSearchTerm}"`
         : selectedCategories && selectedCategories.length === 1
-        ? `Browse our collection of ${selectedCategories[0].toLowerCase()} furniture`
-        : 'Browse our collection of handcrafted furniture';
+          ? `Browse our collection of ${selectedCategories[0].toLowerCase()} furniture`
+          : 'Browse our collection of handcrafted furniture';
 
     return (
         <AppLayout>
@@ -128,12 +128,8 @@ export default function ProductsPage({
             <div className="container mx-auto px-4 py-16 md:px-6 lg:px-20">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">
-                            {title}
-                        </h1>
-                        <p className="text-muted-foreground">
-                            {description}
-                        </p>
+                        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+                        <p className="text-muted-foreground">{description}</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <form onSubmit={handleSearch} className="flex items-center gap-2">
@@ -161,10 +157,7 @@ export default function ProductsPage({
                             <option value="name-desc">Name: Z-A</option>
                         </select>
                         {selectedCategories && selectedCategories.length > 0 && (
-                            <Button 
-                                variant="outline" 
-                                onClick={handleClearCategory}
-                            >
+                            <Button variant="outline" onClick={handleClearCategory}>
                                 Clear Category Filter
                             </Button>
                         )}

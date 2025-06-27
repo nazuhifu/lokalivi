@@ -1,14 +1,14 @@
 'use client';
 
-import { Link, router, usePage } from '@inertiajs/react';
-import { Heart, ShoppingCart, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatPrice } from '@/lib/utils';
 import AppLayout from '@/layouts/app-layout';
-import { toast } from 'sonner';
+import { formatPrice } from '@/lib/utils';
 import type { PageProps } from '@/types';
 import { WishlistItem } from '@/types/wishlist';
+import { Link, router, usePage } from '@inertiajs/react';
+import { Heart, ShoppingCart, Trash } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function WishlistPage() {
     const { wishlistItems } = usePage<PageProps<{ wishlistItems: WishlistItem[] }>>().props;
@@ -38,7 +38,7 @@ export default function WishlistPage() {
                         description: 'Something went wrong. Please try again.',
                     }),
                 preserveScroll: true,
-            }
+            },
         );
     };
 
@@ -53,10 +53,7 @@ export default function WishlistPage() {
                 {wishlistItems.length > 0 ? (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         {wishlistItems.map((item) => (
-                            <Card
-                                key={item.id}
-                                className="pt-0 overflow-hidden border border-gray-200 transition-all hover:shadow-md"
-                            >
+                            <Card key={item.id} className="overflow-hidden border border-gray-200 pt-0 transition-all hover:shadow-md">
                                 <div className="relative">
                                     <div className="absolute top-2 right-2 z-10">
                                         <Button
@@ -79,21 +76,13 @@ export default function WishlistPage() {
                                 </div>
                                 <CardContent className="p-4">
                                     <div className="text-sm text-muted-foreground">{item.category}</div>
-                                    <Link
-                                        href={`/products/${item.id}`}
-                                        className="mt-1 block text-lg font-medium hover:underline"
-                                    >
+                                    <Link href={`/products/${item.id}`} className="mt-1 block text-lg font-medium hover:underline">
                                         {item.name}
                                     </Link>
-                                    <div className="mt-2 font-semibold">
-                                        {formatPrice(item.price)}
-                                    </div>
+                                    <div className="mt-2 font-semibold">{formatPrice(item.price)}</div>
                                 </CardContent>
                                 <CardFooter className="p-4 pt-0">
-                                    <Button
-                                        className="w-full bg-[#8B5A2B] hover:bg-[#6d472a]"
-                                        onClick={() => addToCart(item)}
-                                    >
+                                    <Button className="w-full bg-[#8B5A2B] hover:bg-[#6d472a]" onClick={() => addToCart(item)}>
                                         <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                                     </Button>
                                 </CardFooter>
@@ -109,9 +98,7 @@ export default function WishlistPage() {
                         </CardHeader>
                         <CardContent>
                             <h3 className="text-lg font-medium">Your wishlist is empty</h3>
-                            <p className="mt-2 text-sm text-muted-foreground">
-                                Browse our collection and add items you love to your wishlist.
-                            </p>
+                            <p className="mt-2 text-sm text-muted-foreground">Browse our collection and add items you love to your wishlist.</p>
                         </CardContent>
                         <CardFooter className="flex justify-center pb-6">
                             <Button className="bg-[#8B5A2B] hover:bg-[#6d472a]" asChild>

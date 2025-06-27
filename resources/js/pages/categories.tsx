@@ -4,7 +4,6 @@ import AppLayout from '@/layouts/app-layout';
 
 import { Head } from '@inertiajs/react';
 
-
 type Category = {
     id: number;
     name: string;

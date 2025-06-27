@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button';
+import { formatPrice } from '@/lib/utils';
 import { Products } from '@/types/product';
 import { Link, router } from '@inertiajs/react';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
-import { formatPrice } from '@/lib/utils';
 
 export function ProductList({ products }: { products: Products[] }) {
     const addToCart = (product: Products) => {

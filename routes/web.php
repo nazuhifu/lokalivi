@@ -29,19 +29,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
-
+    
     // Product review routes
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('reviews.store');
     Route::put('/products/{product}/reviews/{review}', [ProductReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/products/{product}/reviews/{review}', [ProductReviewController::class, 'destroy'])->name('reviews.destroy');
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
+    
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
     Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-
+    
     Route::get('/dashboard', function () {
         $user = Auth::user();
         $orders = [];

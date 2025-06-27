@@ -6,8 +6,8 @@ import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { toast } from 'sonner';
 import { formatPrice } from '@/lib/utils';
+import { toast } from 'sonner';
 
 import { Products } from '@/types/product';
 

@@ -14,11 +14,13 @@ import { Products } from '@/types/product';
 export default function ProductsPage({ 
     products, 
     categories, 
-    selectedCategories: initialSelectedCategories 
+    selectedCategories: initialSelectedCategories,
+    searchTerm: initialSearchTerm = ''
 }: { 
     products: Products[]; 
     categories: { id: number; name: string }[]; 
     selectedCategories?: string[];
+    searchTerm?: string;
 }) {
     // Get min/max price from products
     const prices = products.map((p) => Number(p.price));
@@ -31,11 +33,31 @@ export default function ProductsPage({
         setSelectedCategories(initialSelectedCategories || []);
     }, [initialSelectedCategories]);
 
+    // Sync searchTerm with prop from server
+    const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+    const [localSearchTerm, setLocalSearchTerm] = useState(initialSearchTerm);
+    useEffect(() => {
+        setSearchTerm(initialSearchTerm);
+        setLocalSearchTerm(initialSearchTerm);
+    }, [initialSearchTerm]);
+
     const [priceRange, setPriceRange] = useState<[number, number]>([minPrice, maxPrice]);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [showSidebar, setShowSidebar] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('newest');
+
+    // Handle search submission
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        const params: Record<string, string> = {};
+        if (localSearchTerm.trim()) {
+            params.search = localSearchTerm.trim();
+        }
+        if (selectedCategories.length > 0) {
+            params.categories = selectedCategories.join(',');
+        }
+        router.get('/products', params, { preserveState: true });
+    };
 
     // When category filter changes, update the URL and reload from server
     const handleCategoryChange = (newCategories: string[]) => {
@@ -44,21 +66,27 @@ export default function ProductsPage({
         if (newCategories.length > 0) {
             params.categories = newCategories.join(',');
         }
+        if (searchTerm.trim()) {
+            params.search = searchTerm.trim();
+        }
         router.get('/products', params, { preserveState: true });
     };
 
     // When clearing category filter
     const handleClearCategory = () => {
         setSelectedCategories([]);
-        router.get('/products', {}, { preserveState: true });
+        const params: Record<string, string> = {};
+        if (searchTerm.trim()) {
+            params.search = searchTerm.trim();
+        }
+        router.get('/products', params, { preserveState: true });
     };
 
-    // Filter and sort products client-side (except for category, which is now server-side)
+    // Filter and sort products client-side (except for category and search, which are now server-side)
     const filteredProducts = useMemo(() => {
         let result = products.filter((product) => {
             const inPrice = Number(product.price) >= priceRange[0] && Number(product.price) <= priceRange[1];
-            const inSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-            return inPrice && inSearch;
+            return inPrice;
         });
         // Sorting
         switch (sortBy) {
@@ -80,13 +108,17 @@ export default function ProductsPage({
                 break;
         }
         return result;
-    }, [products, priceRange, searchTerm, sortBy]);
+    }, [products, priceRange, sortBy]);
 
-    // For title/description
-    const title = selectedCategories && selectedCategories.length === 1
+    // For title/description - only use the actual search term from server, not local input
+    const title = initialSearchTerm 
+        ? `Search Results for "${initialSearchTerm}"`
+        : selectedCategories && selectedCategories.length === 1
         ? `${selectedCategories[0]} Products`
         : 'All Products';
-    const description = selectedCategories && selectedCategories.length === 1
+    const description = initialSearchTerm
+        ? `Showing results for "${initialSearchTerm}"`
+        : selectedCategories && selectedCategories.length === 1
         ? `Browse our collection of ${selectedCategories[0].toLowerCase()} furniture`
         : 'Browse our collection of handcrafted furniture';
 
@@ -104,12 +136,19 @@ export default function ProductsPage({
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Input
-                            placeholder="Search products..."
-                            className="w-full md:w-[200px] lg:w-[300px]"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                        <form onSubmit={handleSearch} className="flex items-center gap-2">
+                            <Input
+                                placeholder="Search products..."
+                                className="w-full md:w-[200px] lg:w-[300px]"
+                                value={localSearchTerm}
+                                onChange={(e) => setLocalSearchTerm(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearch(e);
+                                    }
+                                }}
+                            />
+                        </form>
                         <select
                             className="rounded-md border px-2 py-1 text-sm text-gray-700"
                             value={sortBy}

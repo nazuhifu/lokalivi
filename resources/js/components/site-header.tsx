@@ -1,6 +1,6 @@
 'use client';
 
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 
 import { Heart, LogOut, Menu, Package2, Search, ShoppingCart, User, X } from 'lucide-react';
 import { useState } from 'react';
@@ -28,6 +28,27 @@ export function SiteHeader() {
     const isAdmin = !!user?.is_admin;
     const cartCount = cart?.count ?? 0;
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Handle search submission
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            router.get('/products', { search: searchTerm.trim() });
+            setIsSearchOpen(false);
+            setSearchTerm('');
+        }
+    };
+
+    // Handle search submission for mobile
+    const handleMobileSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            router.get('/products', { search: searchTerm.trim() });
+            setSearchTerm('');
+        }
+    };
+
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
             <div className="container mx-auto px-4 sm:px-6 lg:px-20">
@@ -59,10 +80,22 @@ export function SiteHeader() {
 
                                     {/* Mobile search */}
                                     <div className="border-b p-6">
-                                        <div className="relative">
-                                            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-                                            <Input placeholder="Search products..." className="h-10 pl-10 text-sm" />
-                                        </div>
+                                        <form onSubmit={handleMobileSearch}>
+                                            <div className="relative">
+                                                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+                                                <Input 
+                                                    placeholder="Search products..." 
+                                                    className="h-10 pl-10 text-sm" 
+                                                    value={searchTerm}
+                                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter') {
+                                                            handleMobileSearch(e);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </form>
                                     </div>
 
                                     {/* Mobile menu navigation */}
@@ -208,12 +241,23 @@ export function SiteHeader() {
                     <div className="flex flex-shrink-0 items-center gap-2">
                         {/* Search */}
                         {isSearchOpen ? (
-                            <div className="hidden items-center gap-2 md:flex">
-                                <Input placeholder="Search products..." className="h-9 w-64 text-sm" autoFocus />
+                            <form onSubmit={handleSearch} className="hidden items-center gap-2 md:flex">
+                                <Input 
+                                    placeholder="Search products..." 
+                                    className="h-9 w-64 text-sm" 
+                                    autoFocus 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSearch(e);
+                                        }
+                                    }}
+                                />
                                 <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)} className="h-9 w-9 flex-shrink-0">
                                     <X className="h-4 w-4" />
                                 </Button>
-                            </div>
+                            </form>
                         ) : (
                             <Button
                                 variant="ghost"

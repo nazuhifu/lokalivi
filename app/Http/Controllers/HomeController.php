@@ -25,8 +25,31 @@ class HomeController extends Controller
                 ];
             });
 
+        $categories = Category::withCount('products')->get()->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'products_count' => $category->products_count,
+                'image' => $this->getCategoryImage($category->id),
+            ];
+        });
+
         return Inertia::render('home', [
             'featuredProducts' => $featuredProducts,
+            'categories' => $categories,
         ]);
+    }
+
+    private function getCategoryImage($categoryId)
+    {
+        $imagePath = "/images/category/{$categoryId}";
+        $extensions = ['png', 'jpg', 'jpeg'];
+        foreach ($extensions as $ext) {
+            $fullPath = public_path("images/category/{$categoryId}.{$ext}");
+            if (file_exists($fullPath)) {
+                return "{$imagePath}.{$ext}";
+            }
+        }
+        return '/placeholder.svg';
     }
 }

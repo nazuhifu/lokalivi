@@ -4,6 +4,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { Heart, ShoppingCart, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatPrice } from '@/lib/utils';
 import AppLayout from '@/layouts/app-layout';
 import { toast } from 'sonner';
 import type { PageProps } from '@/types';
@@ -85,7 +86,7 @@ export default function WishlistPage() {
                                         {item.name}
                                     </Link>
                                     <div className="mt-2 font-semibold">
-                                        Rp{item.price.toLocaleString('id-ID')}
+                                        {formatPrice(item.price)}
                                     </div>
                                 </CardContent>
                                 <CardFooter className="p-4 pt-0">

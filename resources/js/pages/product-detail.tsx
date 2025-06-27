@@ -7,6 +7,7 @@ import { RelatedProducts } from '@/components/related-products';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { formatPrice } from '@/lib/utils';
 
 import AppLayout from '@/layouts/app-layout';
 
@@ -125,7 +126,7 @@ export default function ProductDetailPage({ product, relatedProducts }: ProductD
                             </div>
                         </div>
 
-                        <div className="text-2xl font-bold">${product.price.toLocaleString()}</div>
+                        <div className="text-2xl font-bold">{formatPrice(product.price)}</div>
 
                         <p className="text-muted-foreground">{product.description}</p>
 

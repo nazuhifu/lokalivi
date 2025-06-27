@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import DashboardSidebarLayout from '@/layouts/app/dashboard-sidebar-layout';
+import { formatPrice } from '@/lib/utils';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Pencil, Plus, Trash } from 'lucide-react';
 
@@ -63,7 +64,7 @@ export default function AdminProducts() {
                                     </td>
                                     <td className="px-4 py-2 font-medium">{product.name}</td>
                                     <td className="px-4 py-2">{product.category?.name || '-'}</td>
-                                    <td className="px-4 py-2 font-semibold text-[#8B5A2B]">Rp{Number(product.price).toLocaleString('id-ID')}</td>
+                                    <td className="px-4 py-2 font-semibold text-[#8B5A2B]">{formatPrice(product.price)}</td>
                                     <td className="px-4 py-2">{product.stock_quantity}</td>
                                     <td className="flex gap-2 px-4 py-2">
                                         <Button asChild size="sm" variant="outline">

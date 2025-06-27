@@ -1,6 +1,10 @@
 import { Link } from '@inertiajs/react';
 import { Star } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { formatPrice } from '@/lib/utils';
+
 interface RelatedProductsProps {
     products: Array<{
         id: number;
@@ -39,7 +43,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                     <div className="p-4">
                         <h3 className="line-clamp-2 text-sm font-medium group-hover:text-primary">{product.name}</h3>
                         <div className="mt-2 flex items-center justify-between">
-                            <span className="font-bold">${product.price.toLocaleString()}</span>
+                            <span className="font-bold">{formatPrice(product.price)}</span>
                             <div className="flex items-center">
                                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                                 <span className="ml-1 text-xs text-muted-foreground">{product.rating}</span>

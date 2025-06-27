@@ -129,13 +129,13 @@ export function SiteHeader() {
                                                             href={route('logout')}
                                                             method="post"
                                                             as="button"
-                                                            // Toast should be triggered after logout confirmation, not here
                                                             onClick={() => toast('You have been successfully logged out.')}
+                                                            className="-mx-3 flex items-center gap-3 rounded-md px-3 py-3 text-gray-900 transition-colors hover:bg-white hover:text-[#8B5A2B]"
                                                         >
                                                             <LogOut className="h-5 w-5" />
                                                             <span className="font-medium">Logout</span>
                                                         </Link>
-                                                    </SheetClose>
+                                                        </SheetClose>
                                                 </>
                                             ) : (
                                                 <SheetClose asChild>

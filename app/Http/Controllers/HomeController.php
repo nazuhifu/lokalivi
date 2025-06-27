@@ -25,14 +25,14 @@ class HomeController extends Controller
                 ];
             });
 
-        $categories = Category::withCount('products')->get()->map(function ($category) {
-            return [
-                'id' => $category->id,
-                'name' => $category->name,
-                'products_count' => $category->products_count,
-                'image' => $this->getCategoryImage($category->id),
-            ];
-        });
+    $categories = Category::withCount('products')->get()->map(function ($category) {
+        return [
+            'id' => $category->id,
+            'name' => $category->name,
+            'products_count' => $category->products_count,
+            'image' => $this->getCategoryImage($category->id), // Use the same logic as CategoryController
+        ];
+    });
 
         return Inertia::render('home', [
             'featuredProducts' => $featuredProducts,
@@ -42,12 +42,15 @@ class HomeController extends Controller
 
     private function getCategoryImage($categoryId)
     {
-        $imagePath = "/images/category/{$categoryId}";
+        $category = Category::find($categoryId);
+        if ($category && $category->image_url) {
+            return $category->image_url;
+        }
         $extensions = ['png', 'jpg', 'jpeg'];
         foreach ($extensions as $ext) {
             $fullPath = public_path("images/category/{$categoryId}.{$ext}");
             if (file_exists($fullPath)) {
-                return "{$imagePath}.{$ext}";
+                return "/images/category/{$categoryId}.{$ext}";
             }
         }
         return '/placeholder.svg';

@@ -306,7 +306,6 @@ export default function CheckoutPage() {
     );
 }
 
-// Reusable Components
 function InputGroup({
     id,
     label,

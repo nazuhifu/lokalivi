@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { formatPrice } from '@/lib/utils';
 
 export function FeaturedProducts({ products }: { products: Products[] }) {
-    const isLoggedIn = true; // Ganti dengan auth dari usePage().props jika sudah tersedia
+    const isLoggedIn = true;
 
     const addToWishlist = (product: Products) => {
         if (!isLoggedIn) {

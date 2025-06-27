@@ -90,7 +90,6 @@ export default function AdminDashboard() {
                             <div className="text-2xl font-bold">{formatPrice(Number(stats?.totalRevenue))}</div>
                             <p className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <TrendingUp className="h-3 w-3 text-green-500" />
-                                {/* You can add a real percentage if you want */}
                                 +12% from last month
                             </p>
                         </CardContent>
